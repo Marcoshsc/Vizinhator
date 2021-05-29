@@ -1,0 +1,81 @@
+@import "../../styles/variables.scss";
+
+.title-div {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog-title {
+  border-top: 5px solid $primary-color-dark;
+  background-color: $primary-color;
+}
+
+.title {
+  text-align: center;
+  color: $title-color;
+  font-size: $title-size;
+}
+
+.subtitle {
+  text-align: center;
+  color: $subtitle-color;
+  font-size: $subtitle-size;
+}
+
+.content-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 20px;
+}
+
+.content-div-item {
+  p {
+    font-size: $text-size;
+  }
+  display: flex;
+  flex-grow: 1;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+
+.action-div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+}
+
+.action-div-item {
+  flex-grow: 1;
+  padding: 5px;
+  width: calc(100% - 5px);
+}
+
+.action-form {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  button {
+    background-color: $primary-color;
+  }
+  button:hover {
+    background-color: $primary-color-dark;
+  }
+}
+
+.action-form-input {
+  width: 50%;
+}
+
+.action-form-input-label {
+  text-align: center;
+}
