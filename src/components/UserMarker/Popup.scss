@@ -1,0 +1,24 @@
+@import "../../styles/variables.scss";
+
+.user-marker-popup {
+  .leaflet-popup-content-wrapper {
+    border-radius: 0;
+    padding: 0;
+  }
+  .leaflet-popup-content {
+    p {
+      margin: 0;
+    }
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+  }
+  .leaflet-popup-close-button {
+    display: none;
+  }
+}
