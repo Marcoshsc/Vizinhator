@@ -38,6 +38,10 @@
   p {
     font-size: $text-size;
   }
+  svg {
+    width: 18px;
+    height: 18px;
+  }
   display: flex;
   flex-grow: 1;
   flex-direction: row;

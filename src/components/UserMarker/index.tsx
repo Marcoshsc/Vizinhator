@@ -1,6 +1,6 @@
 import { Button, Divider, Tooltip, Typography } from "@material-ui/core"
 import L from "leaflet"
-import React, { FC } from "react"
+import React, { FC, ReactNode } from "react"
 import { FaPhoneAlt } from "react-icons/fa"
 import { MdWork } from "react-icons/md"
 import { BiTime, BiLike, BiDislike } from "react-icons/bi"
@@ -29,20 +29,71 @@ export interface UserMarkerProps {
   user: User
 }
 
+interface SimplePopupItemProps {
+  innerText: string | undefined
+  title: string
+  icon: ReactNode
+}
+
+const SimplePopupItem: FC<SimplePopupItemProps> = (props) => {
+  if (!props.innerText) return null
+  return (
+    <Tooltip title={props.title}>
+      <div className={styles["popup-item"]}>
+        {props.icon}
+        <Typography>{props.innerText}</Typography>
+      </div>
+    </Tooltip>
+  )
+}
+
+interface CustomPopupItemProps {
+  children: ReactNode
+  title?: string
+  additionalClasses?: string[]
+}
+
+const CustomPopupItem: FC<CustomPopupItemProps> = (props) => {
+  const additionalClasses = props.additionalClasses || []
+
+  const commonPart = (
+    <div className={clsx(styles["popup-item"], ...additionalClasses)}>
+      {props.children}
+    </div>
+  )
+
+  return props.title ? (
+    <Tooltip title={props.title}>{commonPart}</Tooltip>
+  ) : (
+    commonPart
+  )
+}
+
+export interface PopupTitleProps {
+  user: User
+}
+
+const PopupTitle: FC<PopupTitleProps> = (props) => {
+  const user = props.user
+
+  return (
+    <div className={clsx(styles["popup-item"], styles["title"])}>
+      {user.avatarUrl && (
+        <img
+          className={styles["avatar"]}
+          width={20}
+          height={20}
+          src={user.avatarUrl}
+          alt="User Avatar"
+        />
+      )}
+      <Typography component="h2">{user.name}</Typography>
+    </div>
+  )
+}
+
 const UserMarker: FC<UserMarkerProps> = ({ user }) => {
   const iconSize = 30
-  const {
-    position,
-    avatarUrl,
-    name,
-    description,
-    available,
-    cellphone,
-    likes,
-    dislikes,
-    occupation,
-    since,
-  } = user
 
   const formatNumber = (n: number) => {
     return n < 10 ? `0${n}` : n.toString()
@@ -57,71 +108,56 @@ const UserMarker: FC<UserMarkerProps> = ({ user }) => {
   }
 
   return (
-    <Marker position={position} icon={getAvatarIcon(iconSize, avatarUrl)}>
+    <Marker
+      position={user.position}
+      icon={getAvatarIcon(iconSize, user.avatarUrl)}
+    >
       <Popup className="user-marker-popup">
-        <div className={clsx(styles["popup-item"], styles["title"])}>
-          {avatarUrl && (
-            <img
-              className={styles["avatar"]}
-              width={20}
-              height={20}
-              src={avatarUrl}
-              alt="User Avatar"
-            />
-          )}
-          <Typography component="h2">{name}</Typography>
-        </div>
-        {/* <Divider /> */}
-        <Tooltip title="User description">
-          <div className={styles["popup-item"]}>
-            <BsPeopleCircle size={18} />
-            <Typography>{description}</Typography>
-          </div>
-        </Tooltip>
+        <PopupTitle user={user} />
+        <SimplePopupItem
+          title="User description"
+          icon={<BsPeopleCircle />}
+          innerText={user.description}
+        />
         <Divider />
-        <Tooltip title="Register time at this address">
-          <div className={styles["popup-item"]}>
-            <IoMdCalendar size={18} />
-            <Typography>{`Since ${formatDate(since)}`}</Typography>
-          </div>
-        </Tooltip>
+        <SimplePopupItem
+          title="Register time at this address"
+          icon={<IoMdCalendar />}
+          innerText={`Since ${formatDate(user.since)}`}
+        />
         <Divider />
-        <Tooltip title="Phone number">
-          <div className={styles["popup-item"]}>
-            <FaPhoneAlt size={18} />
-            <Typography>{cellphone}</Typography>
-          </div>
-        </Tooltip>
+        <SimplePopupItem
+          title="Phone number"
+          icon={<FaPhoneAlt />}
+          innerText={user.cellphone}
+        />
         <Divider />
-        <Tooltip title="User Occupation">
-          <div className={styles["popup-item"]}>
-            <MdWork size={18} />
-            <Typography>{occupation}</Typography>
-          </div>
-        </Tooltip>
+        <SimplePopupItem
+          title="User Occupation"
+          icon={<MdWork />}
+          innerText={user.occupation}
+        />
         <Divider />
-        <Tooltip title="Available hours for calls">
-          <div className={styles["popup-item"]}>
-            <BiTime size={18} />
-            <Typography>{available}</Typography>
-          </div>
-        </Tooltip>
+        <SimplePopupItem
+          title="Available hours for calls"
+          icon={<BiTime />}
+          innerText={user.available}
+        />
         <Divider />
-        <Tooltip title="Likes/Dislikes received from other users">
-          <div
-            className={clsx(styles["popup-item"], styles["centerized-flex"])}
-          >
-            <BiLike size={18} />
-            <Typography>{likes}</Typography>
-            <BiDislike size={18} />
-            <Typography>{dislikes}</Typography>
-          </div>
-        </Tooltip>
-        <div className={clsx(styles["popup-item"], styles["centerized-flex"])}>
+        <CustomPopupItem
+          title="Likes/Dislikes received from other users"
+          additionalClasses={[styles["centerized-flex"]]}
+        >
+          <BiLike size={18} />
+          <Typography>{user.likes}</Typography>
+          <BiDislike size={18} />
+          <Typography>{user.dislikes}</Typography>
+        </CustomPopupItem>
+        <CustomPopupItem additionalClasses={[styles["centerized-flex"]]}>
           <Button variant="contained" color="primary">
             More
           </Button>
-        </div>
+        </CustomPopupItem>
         <Divider />
       </Popup>
     </Marker>

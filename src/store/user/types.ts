@@ -10,3 +10,11 @@ export interface User {
   description: string | undefined
   position: [number, number]
 }
+
+export enum UserActions {
+  SELECT_USER = "@user/SELECT_USER",
+}
+
+export interface UserState {
+  selected?: User
+}

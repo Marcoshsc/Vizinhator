@@ -1,13 +1,17 @@
 import { StylesProvider } from "@material-ui/styles"
 import React from "react"
-import MapView from "./components/MapView"
+import { Provider } from "react-redux"
+import PageComponents from "./components/PageComponents"
+import store from "./store"
 import "./styles/global.scss"
 
 function App() {
   return (
-    <StylesProvider injectFirst>
-      <MapView />
-    </StylesProvider>
+    <Provider store={store}>
+      <StylesProvider injectFirst>
+        <PageComponents />
+      </StylesProvider>
+    </Provider>
   )
 }
 
