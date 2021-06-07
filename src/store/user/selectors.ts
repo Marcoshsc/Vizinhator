@@ -5,6 +5,8 @@ export const getUsers = ({ user }: ApplicationState) => user.users
 
 const getSelectedUserId = ({ user }: ApplicationState) => user.selected
 
+export const getLoggedUser = ({ user }: ApplicationState) => user.logged
+
 export const getSelectedUser = createSelector(
   getUsers,
   getSelectedUserId,

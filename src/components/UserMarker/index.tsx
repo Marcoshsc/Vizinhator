@@ -13,6 +13,7 @@ import "./Popup.scss"
 import clsx from "clsx"
 import { useDispatch } from "react-redux"
 import { selectUser } from "../../store/user/actions"
+import { formatDate } from "../../utils/date"
 
 const getAvatarIcon = (
   size: number,
@@ -99,18 +100,6 @@ const UserMarker: FC<UserMarkerProps> = ({ user }) => {
   const dispatch = useDispatch()
   const markerRef = useRef<LeafletMarker>(null)
 
-  const formatNumber = (n: number) => {
-    return n < 10 ? `0${n}` : n.toString()
-  }
-
-  const formatDate = (date: Date | undefined): string | undefined => {
-    if (!date) return undefined
-    const monthDay = formatNumber(date.getDate())
-    const month = formatNumber(date.getMonth() + 1)
-    const year = date.getFullYear()
-    return `${monthDay}/${month}/${year}`
-  }
-
   const handleSeeMore = () => {
     if (markerRef.current) {
       markerRef.current.closePopup()
@@ -160,9 +149,9 @@ const UserMarker: FC<UserMarkerProps> = ({ user }) => {
           title="Likes/Dislikes received from other users"
           additionalClasses={[styles["centerized-flex"]]}
         >
-          <BiLike size={18} />
+          <BiLike />
           <Typography>{user.likes}</Typography>
-          <BiDislike size={18} />
+          <BiDislike />
           <Typography>{user.dislikes}</Typography>
         </CustomPopupItem>
         <CustomPopupItem additionalClasses={[styles["centerized-flex"]]}>
