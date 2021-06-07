@@ -6,7 +6,7 @@ import UserInfoDialog from "../UserInfoDialog"
 const PageComponents: FC = () => {
   return (
     <>
-      <FirstAccessDialog />
+      {/* <FirstAccessDialog /> */}
       <MapView />
       <UserInfoDialog />
     </>

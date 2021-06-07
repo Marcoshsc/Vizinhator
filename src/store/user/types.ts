@@ -1,4 +1,5 @@
 export interface User {
+  id: number
   name: string
   cellphone: string | undefined
   occupation: string | undefined
@@ -16,5 +17,6 @@ export enum UserActions {
 }
 
 export interface UserState {
-  selected?: User
+  selected?: number
+  users: User[]
 }
