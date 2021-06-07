@@ -1,6 +1,6 @@
 import { Button, Divider, Tooltip, Typography } from "@material-ui/core"
-import L from "leaflet"
-import React, { FC, ReactNode } from "react"
+import L, { Marker as LeafletMarker } from "leaflet"
+import React, { FC, ReactNode, useRef } from "react"
 import { FaPhoneAlt } from "react-icons/fa"
 import { MdWork } from "react-icons/md"
 import { BiTime, BiLike, BiDislike } from "react-icons/bi"
@@ -11,6 +11,8 @@ import { User } from "../../store/user/types"
 import styles from "./UserMarker.module.scss"
 import "./Popup.scss"
 import clsx from "clsx"
+import { useDispatch } from "react-redux"
+import { selectUser } from "../../store/user/actions"
 
 const getAvatarIcon = (
   size: number,
@@ -94,6 +96,8 @@ const PopupTitle: FC<PopupTitleProps> = (props) => {
 
 const UserMarker: FC<UserMarkerProps> = ({ user }) => {
   const iconSize = 30
+  const dispatch = useDispatch()
+  const markerRef = useRef<LeafletMarker>(null)
 
   const formatNumber = (n: number) => {
     return n < 10 ? `0${n}` : n.toString()
@@ -107,8 +111,16 @@ const UserMarker: FC<UserMarkerProps> = ({ user }) => {
     return `${monthDay}/${month}/${year}`
   }
 
+  const handleSeeMore = () => {
+    if (markerRef.current) {
+      markerRef.current.closePopup()
+    }
+    dispatch(selectUser(user))
+  }
+
   return (
     <Marker
+      ref={markerRef}
       position={user.position}
       icon={getAvatarIcon(iconSize, user.avatarUrl)}
     >
@@ -154,7 +166,7 @@ const UserMarker: FC<UserMarkerProps> = ({ user }) => {
           <Typography>{user.dislikes}</Typography>
         </CustomPopupItem>
         <CustomPopupItem additionalClasses={[styles["centerized-flex"]]}>
-          <Button variant="contained" color="primary">
+          <Button variant="contained" color="primary" onClick={handleSeeMore}>
             More
           </Button>
         </CustomPopupItem>
