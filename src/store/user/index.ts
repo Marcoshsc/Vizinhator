@@ -7,19 +7,35 @@ date.setMonth(5)
 date.setFullYear(2020)
 
 const INITIAL_STATE: UserState = {
-  selected: 0,
+  selected: undefined,
+  changingLocation: false,
+  showProfile: true,
   logged: {
     id: 10,
-    avatarUrl:
-      "https://attachments.clickup.com/profilePictures/3208401_ky9.jpg",
+    avatarUrl: {
+      value: "https://attachments.clickup.com/profilePictures/3208401_ky9.jpg",
+      hide: false,
+    },
     position: [-19.685099, -43.586733],
-    available: "Afternoons",
-    cellphone: "(31) 98726-4235",
-    description: "I'm Alvaro, I like javascript.",
+    available: {
+      value: "Afternoons",
+      hide: false,
+    },
+    cellphone: {
+      value: "(31) 98726-4235",
+      hide: false,
+    },
+    description: {
+      value: "I'm Alvaro, I like javascript.",
+      hide: false,
+    },
     likes: 3,
     dislikes: 4,
     name: "Álvaro Basílio",
-    occupation: "Software developer",
+    occupation: {
+      value: "Software developer",
+      hide: false,
+    },
     since: date,
     closeFriend: true,
     liked: false,
@@ -29,15 +45,30 @@ const INITIAL_STATE: UserState = {
   users: [
     {
       id: 0,
-      avatarUrl: "https://avatars.githubusercontent.com/u/43068788?v=4",
+      avatarUrl: {
+        value: "https://avatars.githubusercontent.com/u/43068788?v=4",
+        hide: false,
+      },
       position: [-19.685392, -43.586517],
-      available: "Afternoons",
-      cellphone: "(31) 98726-4235",
-      description: "I'm Alvaro, I like javascript.",
+      available: {
+        value: "Afternoons",
+        hide: false,
+      },
+      cellphone: {
+        value: "(31) 98726-4235",
+        hide: false,
+      },
+      description: {
+        value: "I'm Alvaro, I like javascript.",
+        hide: false,
+      },
       likes: 3,
       dislikes: 4,
       name: "Álvaro Basílio",
-      occupation: "Software developer",
+      occupation: {
+        value: "Software developer",
+        hide: false,
+      },
       since: date,
       closeFriend: true,
       liked: true,
@@ -54,15 +85,30 @@ const INITIAL_STATE: UserState = {
     },
     {
       id: 1,
-      avatarUrl: "https://avatars.githubusercontent.com/u/52552199?v=4",
+      avatarUrl: {
+        value: "https://avatars.githubusercontent.com/u/52552199?v=4",
+        hide: false,
+      },
       position: [-19.685474, -43.58709],
-      available: "Afternoons",
-      cellphone: "(31) 98726-4235",
-      description: "I'm Marcos, I like javascript, python and linux.",
+      available: {
+        value: "Afternoons",
+        hide: false,
+      },
+      cellphone: {
+        value: "(31) 98726-4235",
+        hide: false,
+      },
+      description: {
+        value: "I'm Marcos, I like javascript, python and linux.",
+        hide: false,
+      },
       likes: 3,
       dislikes: 4,
       name: "Álvaro Basílio",
-      occupation: "Software developer",
+      occupation: {
+        hide: false,
+        value: "Software developer",
+      },
       since: date,
       closeFriend: true,
       liked: false,
@@ -74,16 +120,31 @@ const INITIAL_STATE: UserState = {
     },
     {
       id: 2,
-      avatarUrl:
-        "https://attachments.clickup.com/profilePictures/3208401_ky9.jpg",
+      avatarUrl: {
+        value:
+          "https://attachments.clickup.com/profilePictures/3208401_ky9.jpg",
+        hide: false,
+      },
       position: [-19.685099, -43.586733],
-      available: "Afternoons",
-      cellphone: "(31) 98726-4235",
-      description: "I'm Alvaro, I like javascript.",
+      available: {
+        value: "Afternoons",
+        hide: false,
+      },
+      cellphone: {
+        value: "(31) 98726-4235",
+        hide: false,
+      },
+      description: {
+        value: "I'm Alvaro, I like javascript.",
+        hide: false,
+      },
       likes: 3,
       dislikes: 4,
       name: "Álvaro Basílio",
-      occupation: "Software developer",
+      occupation: {
+        value: "Software developer",
+        hide: false,
+      },
       since: date,
       closeFriend: true,
       liked: false,
@@ -95,16 +156,31 @@ const INITIAL_STATE: UserState = {
     },
     {
       id: 3,
-      avatarUrl:
-        "https://conteudo.imguol.com.br/c/entretenimento/c3/2017/11/24/albert-einstein-1511565360545_v2_1513x1920.jpg",
+      avatarUrl: {
+        value:
+          "https://conteudo.imguol.com.br/c/entretenimento/c3/2017/11/24/albert-einstein-1511565360545_v2_1513x1920.jpg",
+        hide: false,
+      },
       position: [-19.684799, -43.586559],
-      available: "Afternoons",
-      cellphone: "(31) 98726-4235",
-      description: "e=mc2.",
+      available: {
+        value: "Afternoons",
+        hide: false,
+      },
+      cellphone: {
+        value: "(31) 98726-4235",
+        hide: false,
+      },
+      description: {
+        value: "e=mc2.",
+        hide: false,
+      },
       likes: 3,
       dislikes: 4,
       name: "Albert Einstein",
-      occupation: "Software developer",
+      occupation: {
+        value: "Software developer",
+        hide: false,
+      },
       since: date,
       closeFriend: false,
       liked: false,
@@ -118,13 +194,25 @@ const INITIAL_STATE: UserState = {
       id: 4,
       avatarUrl: undefined,
       position: [-19.68536, -43.586221],
-      available: "Afternoons",
-      cellphone: "(31) 98726-4235",
-      description: "I'm Alvaro, I like javascript.",
+      available: {
+        value: "Afternoons",
+        hide: false,
+      },
+      cellphone: {
+        value: "(31) 98726-4235",
+        hide: false,
+      },
+      description: {
+        value: "I'm Alvaro, I like javascript.",
+        hide: false,
+      },
       likes: 3,
       dislikes: 4,
       name: "Álvaro Basílio",
-      occupation: "Software developer",
+      occupation: {
+        value: "Software developer",
+        hide: false,
+      },
       since: date,
       closeFriend: false,
       liked: false,
@@ -143,6 +231,13 @@ const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
       const user: User | undefined = action.payload.user
       return { ...state, selected: user?.id }
     }
+    case UserActions.CHANGE_LOCATION: {
+      return {
+        ...state,
+        changingLocation: action.payload.value,
+        changingLocationCallback: action.payload.callback,
+      }
+    }
     case UserActions.SEND_MESSAGE: {
       const message: Message = action.payload.message
       const user: User = action.payload.user
@@ -155,6 +250,9 @@ const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
           { ...entityUser, messages: [...entityUser.messages] },
         ],
       }
+    }
+    case UserActions.SHOW_PROFILE: {
+      return { ...state, showProfile: action.payload.value }
     }
     default:
       return state

@@ -1,0 +1,72 @@
+@import '../../styles/flex.scss';
+@import '../../styles/utils.scss';
+
+.container {
+  @include flex-column(10px, center, flex-start);
+}
+
+.actions {
+  @include flex-row(10px, flex-end, center);
+}
+
+.profileImage {
+  @include flex-row(0, center, center);
+  width: 100%;
+  img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+  }
+}
+
+.labelDiv {
+  @include flex-row(20px, flex-start, center);
+  width: 150px;
+}
+
+.textField {
+  flex-grow: 1;
+}
+
+.infoDivContainer {
+  @include flex-column(10px, center, flex-start);
+  width: 100%;
+}
+
+.locationDiv {
+  @include flex-row(10px, flex-start, center);
+  width: 100%;
+  padding: 8px;
+  .mainItems {
+    @include flex-row(10px, flex-start, center);
+    flex-grow: 1;
+    svg {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
+  }
+}
+
+.infoDiv {
+  @include flex-row(15px, flex-start, center);
+  width: 100%;
+  padding: 10px;
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+  p {
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.hideDiv {
+  @include flex-row(15px, flex-start, center);
+  margin-left: 30px;
+}
+
+.checkbox {
+  transform: scale(1.5);
+}

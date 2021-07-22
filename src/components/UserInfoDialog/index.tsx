@@ -19,7 +19,7 @@ import React, {
 import { useDispatch, useSelector } from "react-redux"
 import { selectUser, sendMessage } from "../../store/user/actions"
 import { getSelectedUser } from "../../store/user/selectors"
-import { Message, User } from "../../store/user/types"
+import { FieldValue, Message, User } from "../../store/user/types"
 import { FaPhoneAlt, FaUserFriends, FaWindowClose } from "react-icons/fa"
 import styles from "./UserInfo.module.scss"
 import { BiBlock, BiDislike, BiLike, BiTime } from "react-icons/bi"
@@ -80,7 +80,7 @@ const Title: FC<{ user: User; handleClose(): void }> = (props) => {
   return (
     <div className={styles["dialog-title"]}>
       <div className={styles["dialog-title-content"]}>
-        <img src={user.avatarUrl} alt="User Avatar" />
+        {user.avatarUrl && <img src={user.avatarUrl.value} alt="User Avatar" />}
         <Typography component="h2">{user.name}</Typography>
         <LikeDislikeIcon
           title={`Like ${user.name}`}
@@ -133,15 +133,18 @@ const CloseFriends: FC<{ user: User }> = (props) => {
 
 const PersonalInfoItem: FC<{
   icon: ReactNode
-  value: string | undefined
+  value?: FieldValue
+  valueString?: string
   field: string
 }> = (props) => {
-  if (!props.value) return null
+  if (!props.value && !props.valueString) return null
+  if (props.value && !props.value.hide) return null
 
+  const valueToUse = props.valueString || props.value?.value
   return (
     <div className={styles["personal-info-item"]}>
       {props.icon}
-      <Typography>{`${props.field}: ${props.value}`}</Typography>
+      <Typography>{`${props.field}: ${valueToUse}`}</Typography>
     </div>
   )
 }
@@ -171,7 +174,7 @@ const PersonalInfo: FC<{ user: User }> = (props) => {
         <PersonalInfoItem
           field="Register time at this address"
           icon={<IoMdCalendar />}
-          value={`Since ${formatDate(user.since)}`}
+          valueString={`Since ${formatDate(user.since)}`}
         />
 
         <PersonalInfoItem

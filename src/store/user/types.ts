@@ -1,14 +1,19 @@
+export interface FieldValue {
+  value: string | undefined
+  hide: boolean
+}
+
 export interface User {
   id: number
   name: string
-  cellphone: string | undefined
-  occupation: string | undefined
+  cellphone?: FieldValue
+  occupation?: FieldValue
   since: Date | undefined
   likes: number
   dislikes: number
-  avatarUrl: string | undefined
-  available: string | undefined
-  description: string | undefined
+  avatarUrl?: FieldValue
+  available?: FieldValue
+  description?: FieldValue
   position: [number, number]
   closeFriend: boolean
   liked: boolean
@@ -26,10 +31,15 @@ export interface Message {
 export enum UserActions {
   SELECT_USER = "@user/SELECT_USER",
   SEND_MESSAGE = "@user/SEND_MESSAGE",
+  SHOW_PROFILE = "@user/SHOW_PROFILE",
+  CHANGE_LOCATION = "@user/CHANGE_LOCATION",
 }
 
 export interface UserState {
   selected?: number
   users: User[]
   logged: User
+  showProfile: boolean
+  changingLocation: boolean
+  changingLocationCallback?(): void
 }

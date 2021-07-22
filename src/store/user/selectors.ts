@@ -7,6 +7,13 @@ const getSelectedUserId = ({ user }: ApplicationState) => user.selected
 
 export const getLoggedUser = ({ user }: ApplicationState) => user.logged
 
+export const isShowingProfile = ({ user }: ApplicationState) => user.showProfile
+
+export const isChangingLocation = ({ user }: ApplicationState) => ({
+  value: user.changingLocation,
+  callback: user.changingLocationCallback,
+})
+
 export const getSelectedUser = createSelector(
   getUsers,
   getSelectedUserId,

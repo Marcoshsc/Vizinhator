@@ -7,7 +7,7 @@ import { BiTime, BiLike, BiDislike } from "react-icons/bi"
 import { IoMdCalendar } from "react-icons/io"
 import { BsPeopleCircle } from "react-icons/bs"
 import { Marker, Popup } from "react-leaflet"
-import { User } from "../../store/user/types"
+import { FieldValue, User } from "../../store/user/types"
 import styles from "./UserMarker.module.scss"
 import "./Popup.scss"
 import clsx from "clsx"
@@ -33,18 +33,22 @@ export interface UserMarkerProps {
 }
 
 interface SimplePopupItemProps {
-  innerText: string | undefined
+  valueString?: string
+  value?: FieldValue
   title: string
   icon: ReactNode
 }
 
 const SimplePopupItem: FC<SimplePopupItemProps> = (props) => {
-  if (!props.innerText) return null
+  if (!props.value && !props.valueString) return null
+  if (props.value && props.value.hide) return null
+
+  const valueToUse = props.valueString || props.value?.value
   return (
     <Tooltip title={props.title}>
       <div className={styles["popup-item"]}>
         {props.icon}
-        <Typography>{props.innerText}</Typography>
+        <Typography>{valueToUse}</Typography>
       </div>
     </Tooltip>
   )
@@ -86,7 +90,7 @@ const PopupTitle: FC<PopupTitleProps> = (props) => {
           className={styles["avatar"]}
           width={20}
           height={20}
-          src={user.avatarUrl}
+          src={user.avatarUrl.value}
           alt="User Avatar"
         />
       )}
@@ -111,38 +115,38 @@ const UserMarker: FC<UserMarkerProps> = ({ user }) => {
     <Marker
       ref={markerRef}
       position={user.position}
-      icon={getAvatarIcon(iconSize, user.avatarUrl)}
+      icon={getAvatarIcon(iconSize, user.avatarUrl?.value)}
     >
       <Popup className="user-marker-popup">
         <PopupTitle user={user} />
         <SimplePopupItem
           title="User description"
           icon={<BsPeopleCircle />}
-          innerText={user.description}
+          value={user.description}
         />
         <Divider />
         <SimplePopupItem
           title="Register time at this address"
           icon={<IoMdCalendar />}
-          innerText={`Since ${formatDate(user.since)}`}
+          valueString={`Since ${formatDate(user.since)}`}
         />
         <Divider />
         <SimplePopupItem
           title="Phone number"
           icon={<FaPhoneAlt />}
-          innerText={user.cellphone}
+          value={user.cellphone}
         />
         <Divider />
         <SimplePopupItem
           title="User Occupation"
           icon={<MdWork />}
-          innerText={user.occupation}
+          value={user.occupation}
         />
         <Divider />
         <SimplePopupItem
           title="Available hours for calls"
           icon={<BiTime />}
-          innerText={user.available}
+          value={user.available}
         />
         <Divider />
         <CustomPopupItem
