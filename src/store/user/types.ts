@@ -3,6 +3,11 @@ export interface FieldValue {
   hide: boolean
 }
 
+export interface Address {
+  description: string
+  location: [number, number]
+}
+
 export interface User {
   id: number
   name: string
@@ -33,6 +38,7 @@ export enum UserActions {
   SEND_MESSAGE = "@user/SEND_MESSAGE",
   SHOW_PROFILE = "@user/SHOW_PROFILE",
   CHANGE_LOCATION = "@user/CHANGE_LOCATION",
+  SELECT_LOCATION = "@user/SELECT_LOCATION",
 }
 
 export interface UserState {
@@ -42,4 +48,5 @@ export interface UserState {
   showProfile: boolean
   changingLocation: boolean
   changingLocationCallback?(): void
+  selectedLocation?: Address
 }

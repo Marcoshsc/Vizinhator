@@ -1,0 +1,63 @@
+@import '../../styles/flex.scss';
+@import '../../styles/utils.scss';
+
+.container {
+  width: 100%;
+  position: absolute;
+  z-index: 999;
+  top: 20px;
+  @include flex-column(0px, center, center);
+}
+
+.content {
+  background-color: #fafafae1;
+  overflow: hidden;
+  padding: 20px;
+  border-radius: 20px;
+  @include flex-column(10px, center, center);
+}
+
+.locations {
+  @include flex-column(0px, flex-start, flex-start);
+  width: 250px;
+  max-height: 200px;
+  overflow: auto;
+  overflow-x: hidden;
+  .locationsItem {
+    @include flex-row(0px, flex-start, center);
+    padding: 10px;
+    border: 1px solid rgba(0,0,0,0.15);
+    &:hover {
+      background-color: rgba(0,0,0,0.05);
+      transition: all 300ms;
+      cursor: pointer;
+    }
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    p {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      font-size: 12px;
+    }
+    height: 50px;
+  }
+}
+
+.textAndLoading {
+  @include flex-row(20px, center, center);
+}
+
+.title {
+  @include flex-row(10px, center, center);
+  width: 100%;
+  padding: 10px;
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.textField {
+  width: 500px;
+}

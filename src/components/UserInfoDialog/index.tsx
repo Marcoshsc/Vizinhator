@@ -138,7 +138,7 @@ const PersonalInfoItem: FC<{
   field: string
 }> = (props) => {
   if (!props.value && !props.valueString) return null
-  if (props.value && !props.value.hide) return null
+  if (props.value && props.value.hide) return null
 
   const valueToUse = props.valueString || props.value?.value
   return (

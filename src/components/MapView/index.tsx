@@ -1,16 +1,51 @@
-import { FC } from "react"
+import { FC, useEffect } from "react"
 import MarkerClusterGroup from "react-leaflet-markercluster"
 import { useDispatch, useSelector } from "react-redux"
-import { getUsers } from "../../store/user/selectors"
+import {
+  getSelectedLocation,
+  getUsers,
+  isChangingLocation,
+} from "../../store/user/selectors"
 import MapComponent from "../Map"
 import UserMarker from "../UserMarker"
 import styles from "./MapView.module.scss"
 import { IoPersonCircleSharp } from "react-icons/io5"
 import { Tooltip } from "@material-ui/core"
 import { showProfile } from "../../store/user/actions"
+import { Marker, useMap } from "react-leaflet"
+
+const MapElements: FC = () => {
+  const changingLocation = useSelector(isChangingLocation)
+  const users = useSelector(getUsers)
+  const selectedLocation = useSelector(getSelectedLocation)
+  const map = useMap()
+
+  useEffect(() => {
+    if (!selectedLocation) return
+    console.log("got here")
+    map.flyTo({
+      lat: selectedLocation.location[0],
+      lng: selectedLocation.location[1],
+    })
+  }, [selectedLocation, map])
+
+  return (
+    <>
+      {!changingLocation.value && (
+        <MarkerClusterGroup>
+          {users.map((el, idx) => (
+            <UserMarker key={idx} user={el} />
+          ))}
+        </MarkerClusterGroup>
+      )}
+      {changingLocation.value && selectedLocation && (
+        <Marker position={selectedLocation.location}></Marker>
+      )}
+    </>
+  )
+}
 
 const MapView: FC<{}> = () => {
-  const users = useSelector(getUsers)
   const dispatch = useDispatch()
 
   const handleOpenProfile = () => {
@@ -30,11 +65,7 @@ const MapView: FC<{}> = () => {
         className={styles.map}
         zoomControl={false}
       >
-        <MarkerClusterGroup>
-          {users.map((el, idx) => (
-            <UserMarker key={idx} user={el} />
-          ))}
-        </MarkerClusterGroup>
+        <MapElements />
       </MapComponent>
     </div>
   )

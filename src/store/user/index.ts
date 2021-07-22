@@ -254,6 +254,9 @@ const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
     case UserActions.SHOW_PROFILE: {
       return { ...state, showProfile: action.payload.value }
     }
+    case UserActions.SELECT_LOCATION: {
+      return { ...state, selectedLocation: action.payload.location }
+    }
     default:
       return state
   }

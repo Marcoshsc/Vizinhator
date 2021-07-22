@@ -1,5 +1,5 @@
 import { action } from "typesafe-actions"
-import { Message, User, UserActions } from "./types"
+import { Address, Message, User, UserActions } from "./types"
 
 export const selectUser = (user: User | undefined) =>
   action(UserActions.SELECT_USER, { user })
@@ -15,3 +15,6 @@ export const startChangingLocation = (callback: () => void) =>
 
 export const stopChangingLocation = () =>
   action(UserActions.CHANGE_LOCATION, { callback: undefined, value: false })
+
+export const selectLocation = (location: Address | undefined) =>
+  action(UserActions.SELECT_LOCATION, { location })
