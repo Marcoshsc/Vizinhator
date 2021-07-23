@@ -108,6 +108,7 @@ const ProfilePage: FC = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
+    if (!loggedUser) return
     setPhone(loggedUser.cellphone?.value || "")
     setHidePhone(loggedUser.cellphone?.hide || false)
 
@@ -144,6 +145,8 @@ const ProfilePage: FC = () => {
   const handleChangeLocation = () => {
     dispatch(startChangingLocation(() => {}))
   }
+
+  if (!loggedUser) return null
 
   return (
     <Dialog

@@ -18,3 +18,7 @@ export const stopChangingLocation = () =>
 
 export const selectLocation = (location: Address | undefined) =>
   action(UserActions.SELECT_LOCATION, { location })
+
+export const closeFirstAccess = () => action(UserActions.CLOSE_FIRST_ACCESS, {})
+
+export const login = (value: boolean) => action(UserActions.LOGIN, { value })

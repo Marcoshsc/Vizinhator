@@ -12,6 +12,10 @@ export const getSelectedLocation = ({ user }: ApplicationState) =>
 
 export const isShowingProfile = ({ user }: ApplicationState) => user.showProfile
 
+export const isFirstAccess = ({ user }: ApplicationState) => user.firstAccess
+
+export const isLogin = ({ user }: ApplicationState) => user.login
+
 export const isChangingLocation = ({ user }: ApplicationState) => ({
   value: user.changingLocation,
   callback: user.changingLocationCallback,

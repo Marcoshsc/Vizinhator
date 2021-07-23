@@ -17,6 +17,13 @@ import {
   Typography,
 } from "@material-ui/core"
 import styles from "./FirstAccessDialog.module.scss"
+import { isFirstAccess } from "../../store/user/selectors"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  closeFirstAccess,
+  login,
+  startChangingLocation,
+} from "../../store/user/actions"
 
 interface ContentItemProps {
   icon: ReactNode
@@ -44,42 +51,39 @@ const Title: FC = (props) => {
 }
 
 const Actions: FC = () => {
-  const [location, setLocation] = useState("")
+  const dispatch = useDispatch()
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    setLocation(e.target.value)
+  const handleClick = () => {
+    dispatch(startChangingLocation(() => {}))
+    dispatch(closeFirstAccess())
+  }
+
+  const handleLogin = () => {
+    dispatch(login(true))
+    dispatch(closeFirstAccess())
   }
 
   return (
     <>
       <div className={styles["action-div-item"]}>
-        <Typography className={styles["subtitle"]} component="h2">
-          Wanna try out? It's simple:
-        </Typography>
+        <Button onClick={handleClick} variant="contained" color="primary">
+          Sign Up and Find your neighbours - It's free!
+        </Button>
       </div>
       <div className={styles["action-div-item"]}>
-        <form onSubmit={() => undefined} className={styles["action-form"]}>
-          <TextField
-            className={styles["action-form-input"]}
-            variant="outlined"
-            value={location}
-            onChange={handleChange}
-            placeholder="Type your Address"
-          />
-          <Button type="submit" variant="contained" color="primary">
-            Find your neighbours
-          </Button>
-        </form>
+        <Button onClick={handleLogin} variant="contained" color="primary">
+          Already have an account? Sign in now!
+        </Button>
       </div>
     </>
   )
 }
 
 const FirstAccessDialog: FC = () => {
+  const firstAccess = useSelector(isFirstAccess)
+
   return (
-    <Dialog open={true} fullWidth maxWidth="lg">
+    <Dialog open={firstAccess} fullWidth maxWidth="lg">
       <DialogTitle className={styles["dialog-title"]}>
         <Title />
       </DialogTitle>

@@ -9,7 +9,9 @@ date.setFullYear(2020)
 const INITIAL_STATE: UserState = {
   selected: undefined,
   changingLocation: false,
-  showProfile: true,
+  showProfile: false,
+  firstAccess: true,
+  login: false,
   logged: {
     id: 10,
     avatarUrl: {
@@ -256,6 +258,12 @@ const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
     }
     case UserActions.SELECT_LOCATION: {
       return { ...state, selectedLocation: action.payload.location }
+    }
+    case UserActions.CLOSE_FIRST_ACCESS: {
+      return { ...state, firstAccess: false }
+    }
+    case UserActions.LOGIN: {
+      return { ...state, login: action.payload.value }
     }
     default:
       return state

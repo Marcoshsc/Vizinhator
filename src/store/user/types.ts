@@ -39,14 +39,18 @@ export enum UserActions {
   SHOW_PROFILE = "@user/SHOW_PROFILE",
   CHANGE_LOCATION = "@user/CHANGE_LOCATION",
   SELECT_LOCATION = "@user/SELECT_LOCATION",
+  CLOSE_FIRST_ACCESS = "@user/CLOSE_FIRST_ACCESS",
+  LOGIN = "@user/LOGIN",
 }
 
 export interface UserState {
   selected?: number
   users: User[]
-  logged: User
+  logged?: User
   showProfile: boolean
   changingLocation: boolean
   changingLocationCallback?(): void
   selectedLocation?: Address
+  firstAccess: boolean
+  login: boolean
 }
