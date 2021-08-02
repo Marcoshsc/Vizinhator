@@ -3,6 +3,7 @@ import { User } from '../../model/user'
 export const getUserDTOFromUser = (savedUser: any) => {
   return {
     id: savedUser._id,
+    password: undefined,
     avatarUrl: {
       value: savedUser.avatarUrl.value,
       hide: savedUser.avatarUrl.hide,

@@ -70,6 +70,8 @@ const userSchema = new mongoose.Schema({
   likedBy: { type: [String], required: true },
   dislikedBy: { type: [String], required: true },
   messages: { type: [messageSchema], required: true },
+  password: { type: String, required: true },
+  email: { type: String, required: true },
 })
 
 export interface FieldValue {
@@ -93,6 +95,8 @@ export interface UserDTO {
   liked?: boolean
   disliked?: boolean
   messages?: Message[]
+  password?: string
+  email?: string
 }
 
 userSchema.virtual('closeFriends', {

@@ -4,11 +4,15 @@ import { addUser, editUser, getUser } from '../repository/generalMethods'
 
 const userRoutes = Router()
 
-userRoutes.post('/', (req, res) => {
+userRoutes.post('/insert', (req, res) => {
   const user: UserDTO = req.body
-  addUser(user).then((savedUser) => {
-    res.json(savedUser)
-  })
+  addUser(user)
+    .then((savedUser) => {
+      res.json(savedUser)
+    })
+    .catch((err) => {
+      res.status(400).send({ message: err.message })
+    })
 })
 
 userRoutes.get('/:id', (req, res) => {

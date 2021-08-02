@@ -1,13 +1,20 @@
 import { User, UserDTO } from '../../model/user'
 import { getUserDTOFromUser } from './util'
+import bcrypt from 'bcrypt'
 
 export const addUser = async (userDTO: UserDTO): Promise<UserDTO> => {
+  if (!userDTO.password) {
+    throw new Error('No password provided.')
+  }
+  const hashedPassword = await bcrypt.hash(userDTO.password, 10)
   const user = new User({
     position: userDTO.location,
     name: userDTO.name,
     cellphone: {
       ...userDTO.cellphone,
     },
+    password: hashedPassword,
+    email: userDTO.email,
     occupation: {
       ...userDTO.occupation,
     },
