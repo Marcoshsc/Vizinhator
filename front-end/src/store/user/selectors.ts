@@ -26,3 +26,5 @@ export const getSelectedUser = createSelector(
   getSelectedUserId,
   (users, id) => users.find((el) => el.id === id)
 )
+
+export const isSignup = ({ user }: ApplicationState) => user.signup

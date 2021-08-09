@@ -84,12 +84,12 @@ const Title: FC<{ user: User; handleClose(): void }> = (props) => {
         <Typography component="h2">{user.name}</Typography>
         <LikeDislikeIcon
           title={`Like ${user.name}`}
-          active={user.liked}
+          active={!!user.liked}
           icon={<BiLike />}
         />
         <LikeDislikeIcon
           title={`Dislike ${user.name}`}
-          active={user.disliked}
+          active={!!user.disliked}
           icon={<BiDislike />}
         />
         <Tooltip title={`Block ${user.name}`} className={styles.tooltip}>
@@ -210,7 +210,9 @@ const MessageInput: FC<{ user: User }> = (props) => {
         body: message,
         logged: true,
         sentAt: new Date(),
-        id: Math.floor(Math.random() * 10000),
+        sender: "",
+        receiver: "",
+        id: Math.floor(Math.random() * 10000).toString(),
       })
     )
     setMessage("")
@@ -253,6 +255,7 @@ const MessagesList: FC<{ user: User }> = (props) => {
   const [reversedMessages, setReversedMessages] = useState<Message[]>([])
 
   useEffect(() => {
+    if (!user.messages) return
     const messagesCopy = Array.from(user.messages)
     setReversedMessages(messagesCopy.reverse())
   }, [user])

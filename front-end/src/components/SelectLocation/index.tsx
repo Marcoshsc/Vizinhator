@@ -62,7 +62,6 @@ const SelectLocation: FC = () => {
   }
 
   const handleSubmit = () => {
-    dispatch(selectLocation(undefined))
     dispatch(stopChangingLocation())
   }
 

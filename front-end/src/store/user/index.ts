@@ -12,219 +12,8 @@ const INITIAL_STATE: UserState = {
   showProfile: false,
   firstAccess: true,
   login: false,
-  logged: {
-    id: 10,
-    avatarUrl: {
-      value: "https://attachments.clickup.com/profilePictures/3208401_ky9.jpg",
-      hide: false,
-    },
-    position: [-19.685099, -43.586733],
-    available: {
-      value: "Afternoons",
-      hide: false,
-    },
-    cellphone: {
-      value: "(31) 98726-4235",
-      hide: false,
-    },
-    description: {
-      value: "I'm Alvaro, I like javascript.",
-      hide: false,
-    },
-    likes: 3,
-    dislikes: 4,
-    name: "Álvaro Basílio",
-    occupation: {
-      value: "Software developer",
-      hide: false,
-    },
-    since: date,
-    closeFriend: true,
-    liked: false,
-    disliked: true,
-    messages: [],
-  },
-  users: [
-    {
-      id: 0,
-      avatarUrl: {
-        value: "https://avatars.githubusercontent.com/u/43068788?v=4",
-        hide: false,
-      },
-      position: [-19.685392, -43.586517],
-      available: {
-        value: "Afternoons",
-        hide: false,
-      },
-      cellphone: {
-        value: "(31) 98726-4235",
-        hide: false,
-      },
-      description: {
-        value: "I'm Alvaro, I like javascript.",
-        hide: false,
-      },
-      likes: 3,
-      dislikes: 4,
-      name: "Álvaro Basílio",
-      occupation: {
-        value: "Software developer",
-        hide: false,
-      },
-      since: date,
-      closeFriend: true,
-      liked: true,
-      disliked: false,
-      messages: [
-        {
-          id: 0,
-          body: "Hello Man! Hello Man! Hello Man! Hello Man! Hello Man! Hello Man! ",
-          sentAt: date,
-          logged: true,
-        },
-        { id: 1, body: "Hello Man!", sentAt: date, logged: false },
-      ],
-    },
-    {
-      id: 1,
-      avatarUrl: {
-        value: "https://avatars.githubusercontent.com/u/52552199?v=4",
-        hide: false,
-      },
-      position: [-19.685474, -43.58709],
-      available: {
-        value: "Afternoons",
-        hide: false,
-      },
-      cellphone: {
-        value: "(31) 98726-4235",
-        hide: false,
-      },
-      description: {
-        value: "I'm Marcos, I like javascript, python and linux.",
-        hide: false,
-      },
-      likes: 3,
-      dislikes: 4,
-      name: "Álvaro Basílio",
-      occupation: {
-        hide: false,
-        value: "Software developer",
-      },
-      since: date,
-      closeFriend: true,
-      liked: false,
-      disliked: true,
-      messages: [
-        { id: 0, body: "Hello Man!", sentAt: date, logged: true },
-        { id: 1, body: "Hello Man!", sentAt: date, logged: false },
-      ],
-    },
-    {
-      id: 2,
-      avatarUrl: {
-        value:
-          "https://attachments.clickup.com/profilePictures/3208401_ky9.jpg",
-        hide: false,
-      },
-      position: [-19.685099, -43.586733],
-      available: {
-        value: "Afternoons",
-        hide: false,
-      },
-      cellphone: {
-        value: "(31) 98726-4235",
-        hide: false,
-      },
-      description: {
-        value: "I'm Alvaro, I like javascript.",
-        hide: false,
-      },
-      likes: 3,
-      dislikes: 4,
-      name: "Álvaro Basílio",
-      occupation: {
-        value: "Software developer",
-        hide: false,
-      },
-      since: date,
-      closeFriend: true,
-      liked: false,
-      disliked: true,
-      messages: [
-        { id: 0, body: "Hello Man!", sentAt: date, logged: true },
-        { id: 1, body: "Hello Man!", sentAt: date, logged: false },
-      ],
-    },
-    {
-      id: 3,
-      avatarUrl: {
-        value:
-          "https://conteudo.imguol.com.br/c/entretenimento/c3/2017/11/24/albert-einstein-1511565360545_v2_1513x1920.jpg",
-        hide: false,
-      },
-      position: [-19.684799, -43.586559],
-      available: {
-        value: "Afternoons",
-        hide: false,
-      },
-      cellphone: {
-        value: "(31) 98726-4235",
-        hide: false,
-      },
-      description: {
-        value: "e=mc2.",
-        hide: false,
-      },
-      likes: 3,
-      dislikes: 4,
-      name: "Albert Einstein",
-      occupation: {
-        value: "Software developer",
-        hide: false,
-      },
-      since: date,
-      closeFriend: false,
-      liked: false,
-      disliked: true,
-      messages: [
-        { id: 0, body: "Hello Man!", sentAt: date, logged: true },
-        { id: 1, body: "Hello Man!", sentAt: date, logged: false },
-      ],
-    },
-    {
-      id: 4,
-      avatarUrl: undefined,
-      position: [-19.68536, -43.586221],
-      available: {
-        value: "Afternoons",
-        hide: false,
-      },
-      cellphone: {
-        value: "(31) 98726-4235",
-        hide: false,
-      },
-      description: {
-        value: "I'm Alvaro, I like javascript.",
-        hide: false,
-      },
-      likes: 3,
-      dislikes: 4,
-      name: "Álvaro Basílio",
-      occupation: {
-        value: "Software developer",
-        hide: false,
-      },
-      since: date,
-      closeFriend: false,
-      liked: false,
-      disliked: true,
-      messages: [
-        { id: 0, body: "Hello Man!", sentAt: date, logged: true },
-        { id: 1, body: "Hello Man!", sentAt: date, logged: false },
-      ],
-    },
-  ],
+  users: [],
+  signup: false,
 }
 
 const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
@@ -232,6 +21,9 @@ const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
     case UserActions.SELECT_USER: {
       const user: User | undefined = action.payload.user
       return { ...state, selected: user?.id }
+    }
+    case UserActions.SIGNUP_STATE: {
+      return { ...state, signup: action.payload.value }
     }
     case UserActions.CHANGE_LOCATION: {
       return {
@@ -244,6 +36,7 @@ const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
       const message: Message = action.payload.message
       const user: User = action.payload.user
       const entityUser = state.users.find((el) => el.id === user.id) as User
+      if (!entityUser.messages) return { ...state }
       entityUser.messages.push(message)
       return {
         ...state,
@@ -252,6 +45,25 @@ const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
           { ...entityUser, messages: [...entityUser.messages] },
         ],
       }
+    }
+    case UserActions.SIGN_IN_INTERN: {
+      return {
+        ...state,
+        token: action.payload.token,
+        logged: action.payload.user,
+        login: false,
+      }
+    }
+    case UserActions.SIGN_UP_INTERN: {
+      return {
+        ...state,
+        token: action.payload.token,
+        logged: action.payload.data,
+        signup: false,
+      }
+    }
+    case UserActions.FETCH_NEIGHBOURS_INTERN: {
+      return { ...state, users: action.payload.users }
     }
     case UserActions.SHOW_PROFILE: {
       return { ...state, showProfile: action.payload.value }

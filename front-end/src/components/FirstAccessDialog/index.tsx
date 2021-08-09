@@ -22,6 +22,8 @@ import { useDispatch, useSelector } from "react-redux"
 import {
   closeFirstAccess,
   login,
+  showProfile,
+  signUpState,
   startChangingLocation,
 } from "../../store/user/actions"
 
@@ -54,6 +56,8 @@ const Actions: FC = () => {
   const dispatch = useDispatch()
 
   const handleClick = () => {
+    dispatch(signUpState(true))
+    dispatch(showProfile(true))
     dispatch(startChangingLocation(() => {}))
     dispatch(closeFirstAccess())
   }

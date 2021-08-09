@@ -4,12 +4,12 @@ import { authenticateUser } from '../repository/generalMethods'
 
 const authRouter = Router()
 
-authRouter.get('/', (req, res) => {
+authRouter.post('/', (req, res) => {
   const authPayload: AuthPayload = req.body
   authenticateUser(authPayload.email, authPayload.password)
-    .then((token) => {
-      res.setHeader('authentication', token)
-      res.status(200).send()
+    .then((authResponse) => {
+      res.setHeader('authentication', authResponse.token)
+      res.status(200).send(authResponse.user)
     })
     .catch((err) => {
       res.status(403).send({ message: err.message })

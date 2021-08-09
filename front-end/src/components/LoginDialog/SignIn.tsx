@@ -13,7 +13,7 @@ import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/core/styles"
 import Container from "@material-ui/core/Container"
 import { useDispatch } from "react-redux"
-import { login } from "../../store/user/actions"
+import { login, signIn } from "../../store/user/actions"
 
 function Copyright() {
   return (
@@ -63,8 +63,7 @@ export default function SignIn() {
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
-    alert(`${email}, ${password}`)
-    dispatch(login(false))
+    dispatch(signIn(email, password))
   }
 
   const handleChange = (cb: (value: string) => void) => {

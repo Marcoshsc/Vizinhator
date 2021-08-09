@@ -1,9 +1,26 @@
-import { User } from '../../model/user'
+import { MessageDTO, User, UserDTO } from '../../model/user'
+import httpContext from 'express-http-context'
 
-export const getUserDTOFromUser = (savedUser: any) => {
+export const generateMessageDTOFromMessage = (message: any): MessageDTO => {
+  return {
+    content: message.content,
+    sentAt: message.sentAt,
+    sender: message.senderId,
+    receiver: message.receiverId,
+  }
+}
+
+export const getUserDTOFromUser = (savedUser: any): UserDTO => {
+  const loggedUser = httpContext.get('loggedUser')
+  const loggedUserId = loggedUser._id.toString()
+  const savedWantsCloseFriend = savedUser.closeFriendsIds.includes(loggedUserId)
+  const loggedUserWantsCloseFriend = loggedUser.closeFriendsIds.includes(
+    savedUser._id.toString()
+  )
   return {
     id: savedUser._id,
     password: undefined,
+    email: undefined,
     avatarUrl: {
       value: savedUser.avatarUrl.value,
       hide: savedUser.avatarUrl.hide,
@@ -24,13 +41,24 @@ export const getUserDTOFromUser = (savedUser: any) => {
       value: savedUser.description.value,
       hide: savedUser.description.hide,
     },
-    closeFriend: true,
+    closeFriend:
+      savedWantsCloseFriend && loggedUserWantsCloseFriend
+        ? 'yes'
+        : savedWantsCloseFriend
+        ? 'he-requested'
+        : loggedUserWantsCloseFriend
+        ? 'you-requested'
+        : 'no',
     since: savedUser.since,
-    likes: 0,
-    dislikes: 0,
-    liked: false,
-    disliked: false,
-    messages: [],
+    likes: savedUser.likedBy.length,
+    dislikes: savedUser.dislikedBy.length,
+    liked: savedUser.likedBy.includes(loggedUserId),
+    disliked: savedUser.dislikedBy.includes(loggedUserId),
+    messages: savedUser.messages
+      .filter(
+        (el) => el.senderId === loggedUserId || el.receiverId === loggedUserId
+      )
+      .map(generateMessageDTOFromMessage),
     location: savedUser.position,
     name: savedUser.name,
   }

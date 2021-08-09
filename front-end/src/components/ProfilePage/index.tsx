@@ -16,11 +16,17 @@ import React, {
   useState,
 } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { showProfile, startChangingLocation } from "../../store/user/actions"
+import {
+  showProfile,
+  signUp,
+  startChangingLocation,
+} from "../../store/user/actions"
 import {
   getLoggedUser,
+  getSelectedLocation,
   isChangingLocation,
   isShowingProfile,
+  isSignup,
 } from "../../store/user/selectors"
 import { FaPhoneAlt } from "react-icons/fa"
 import { MdWork } from "react-icons/md"
@@ -88,10 +94,15 @@ const ProfilePage: FC = () => {
   const loggedUser = useSelector(getLoggedUser)
   const open = useSelector(isShowingProfile)
   const { value } = useSelector(isChangingLocation)
+  const signup = useSelector(isSignup)
   const [editing, setEditing] = useState(true)
 
   const [phone, setPhone] = useState("")
   const [hidePhone, setHidePhone] = useState(false)
+
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
   const [occupation, setOccupation] = useState("")
   const [hideOccupation, setHideOccupation] = useState(false)
@@ -105,12 +116,21 @@ const ProfilePage: FC = () => {
   const [avatarUrl, setAvatarUrl] = useState("")
   const [hideAvatarUrl, setHideAvatarUrl] = useState(false)
 
+  const selectedLocation = useSelector(getSelectedLocation)
+
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    setEditing(signup)
+    console.log(signup)
+  }, [signup])
 
   useEffect(() => {
     if (!loggedUser) return
     setPhone(loggedUser.cellphone?.value || "")
     setHidePhone(loggedUser.cellphone?.hide || false)
+
+    setEmail(loggedUser.email || "")
 
     setOccupation(loggedUser.occupation?.value || "")
     setHideOccupation(loggedUser.occupation?.hide || false)
@@ -133,6 +153,39 @@ const ProfilePage: FC = () => {
     alert("submit")
   }
 
+  const handleCreateProfile = () => {
+    if (!selectedLocation) return
+    dispatch(
+      signUp({
+        name,
+        email,
+        password,
+        available: {
+          hide: hideAvailable,
+          value: available,
+        },
+        position: selectedLocation.location,
+        avatarUrl: {
+          hide: hideAvatarUrl,
+          value: avatarUrl,
+        },
+        cellphone: {
+          hide: hidePhone,
+          value: phone,
+        },
+        description: {
+          hide: hideDescription,
+          value: description,
+        },
+        occupation: {
+          hide: hideOccupation,
+          value: occupation,
+        },
+      })
+    )
+    setEditing(false)
+  }
+
   const handleEdit = () => {
     setEditing(!editing)
   }
@@ -146,7 +199,7 @@ const ProfilePage: FC = () => {
     dispatch(startChangingLocation(() => {}))
   }
 
-  if (!loggedUser) return null
+  if (!loggedUser && !signup) return null
 
   return (
     <Dialog
@@ -156,19 +209,18 @@ const ProfilePage: FC = () => {
       onClose={handleClose}
       className={styles.dialog}
     >
-      <DialogTitle>{`${loggedUser.name}'s Profile`}</DialogTitle>
+      <DialogTitle>
+        {loggedUser ? `${loggedUser.name}'s Profile` : `New profile creation`}
+      </DialogTitle>
       <DialogContent className={styles.container}>
         <div className={styles.profileImage}>
-          {loggedUser.avatarUrl && (
-            <img src={loggedUser.avatarUrl.value} alt="User Avatar" />
-          )}
+          {avatarUrl && <img src={avatarUrl} alt="User Avatar" />}
         </div>
         <form onSubmit={handleSubmit} className={styles.infoDivContainer}>
           <div className={styles.locationDiv}>
             <div className={styles.mainItems}>
               <IoLocationSharp />
-              <Typography>Location:</Typography>
-              <Typography>Here enters location description</Typography>
+              <Typography>Location</Typography>
             </div>
             <Button
               color="primary"
@@ -177,6 +229,37 @@ const ProfilePage: FC = () => {
             >
               Change Location
             </Button>
+          </div>
+          <div className={styles.emailPasswordDiv}>
+            <div className={styles.emailPasswordItem}>
+              <Typography>Name</Typography>
+              <TextField
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                fullWidth
+              />
+            </div>
+            <div className={styles.emailPasswordItem}>
+              <Typography>Email</Typography>
+              <TextField
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                fullWidth
+              />
+            </div>
+            {signup && (
+              <div className={styles.emailPasswordItem}>
+                <Typography>Password</Typography>
+                <TextField
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  fullWidth
+                />
+              </div>
+            )}
           </div>
           <ProfileItem
             icon={<BsPeopleCircle />}
@@ -223,16 +306,29 @@ const ProfilePage: FC = () => {
             label="Description"
             editing={editing}
           />
-          <Button type="submit">SUBMIT</Button>
+          {!signup && (
+            <Button type="submit" onClick={handleSubmit}>
+              Submit
+            </Button>
+          )}
         </form>
       </DialogContent>
       <DialogActions className={styles.actions}>
-        <Button color="primary" onClick={handleEdit}>
-          {editing ? "Cancel Edit" : "Edit Profile"}
-        </Button>
-        <Button color="secondary" onClick={handleNotEdit}>
-          Close
-        </Button>
+        {signup && (
+          <Button color="primary" onClick={handleCreateProfile}>
+            {"Create Profile"}
+          </Button>
+        )}
+        {!signup && (
+          <>
+            <Button color="primary" onClick={handleEdit}>
+              {editing ? "Cancel Edit" : "Edit Profile"}
+            </Button>
+            <Button color="secondary" onClick={handleNotEdit}>
+              Close
+            </Button>
+          </>
+        )}
       </DialogActions>
     </Dialog>
   )

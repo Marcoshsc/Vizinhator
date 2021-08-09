@@ -30,9 +30,11 @@ const messageSchema = new mongoose.Schema({
   content: { type: String, required: true },
 })
 
-interface Message {
+export interface MessageDTO {
   content: string
   sentAt: Date
+  sender: string
+  receiver: string
 }
 
 messageSchema.virtual('sender', {
@@ -58,6 +60,7 @@ const userSchema = new mongoose.Schema({
   position: {
     type: pointSchema,
     required: true,
+    index: '2dsphere',
   },
   name: { type: String, required: true },
   cellphone: { type: fieldValueSchema, required: true },
@@ -91,10 +94,10 @@ export interface UserDTO {
   since?: Date
   likes?: number
   dislikes?: number
-  closeFriend?: boolean
+  closeFriend?: 'no' | 'yes' | 'you-requested' | 'he-requested'
   liked?: boolean
   disliked?: boolean
-  messages?: Message[]
+  messages?: MessageDTO[]
   password?: string
   email?: string
 }
@@ -107,3 +110,4 @@ userSchema.virtual('closeFriends', {
 })
 
 export const User = mongoose.model('User', userSchema)
+export const Message = mongoose.model('Message', messageSchema)

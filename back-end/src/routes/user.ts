@@ -1,6 +1,11 @@
 import { Router } from 'express'
 import { UserDTO } from '../model/user'
-import { addUser, editUser, getUser } from '../repository/generalMethods'
+import {
+  addUser,
+  editUser,
+  getNearUsers,
+  getUser,
+} from '../repository/generalMethods'
 
 const userRoutes = Router()
 
@@ -13,6 +18,12 @@ userRoutes.post('/insert', (req, res) => {
     .catch((err) => {
       res.status(400).send({ message: err.message })
     })
+})
+
+userRoutes.get('/near', (req, res, next) => {
+  getNearUsers()
+    .then((users) => res.status(200).json(users))
+    .catch((err) => console.log(err))
 })
 
 userRoutes.get('/:id', (req, res) => {

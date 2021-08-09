@@ -9,6 +9,15 @@
   @include flex-row(10px, flex-end, center);
 }
 
+.emailPasswordDiv {
+  @include flex-column(10px, center, flex-start);
+  width: 100%;
+  .emailPasswordItem {
+    @include flex-row(10px, flex-start, center);
+    width: 100%;
+  }
+}
+
 .profileImage {
   @include flex-row(0, center, center);
   width: 100%;

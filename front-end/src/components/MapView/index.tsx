@@ -2,6 +2,7 @@ import { FC, useEffect } from "react"
 import MarkerClusterGroup from "react-leaflet-markercluster"
 import { useDispatch, useSelector } from "react-redux"
 import {
+  getLoggedUser,
   getSelectedLocation,
   getUsers,
   isChangingLocation,
@@ -19,6 +20,7 @@ const MapElements: FC = () => {
   const users = useSelector(getUsers)
   const selectedLocation = useSelector(getSelectedLocation)
   const map = useMap()
+  const loggedUser = useSelector(getLoggedUser)
 
   useEffect(() => {
     if (!selectedLocation) return
@@ -28,6 +30,15 @@ const MapElements: FC = () => {
       lng: selectedLocation.location[1],
     })
   }, [selectedLocation, map])
+
+  useEffect(() => {
+    if (loggedUser) {
+      map.flyTo({
+        lat: loggedUser.position[0],
+        lng: loggedUser.position[1],
+      })
+    }
+  }, [loggedUser, map])
 
   return (
     <>

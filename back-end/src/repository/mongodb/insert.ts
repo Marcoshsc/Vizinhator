@@ -1,10 +1,15 @@
 import { User, UserDTO } from '../../model/user'
 import { getUserDTOFromUser } from './util'
 import bcrypt from 'bcrypt'
+import { generateFullUserDTO } from './auth'
 
 export const addUser = async (userDTO: UserDTO): Promise<UserDTO> => {
-  if (!userDTO.password) {
-    throw new Error('No password provided.')
+  if (!userDTO.password || !userDTO.email) {
+    throw new Error('No password or email provided.')
+  }
+  const alreadyExists = await User.findOne({ email: userDTO.email })
+  if (alreadyExists) {
+    throw new Error('User already exists.')
   }
   const hashedPassword = await bcrypt.hash(userDTO.password, 10)
   const user = new User({
@@ -34,7 +39,7 @@ export const addUser = async (userDTO: UserDTO): Promise<UserDTO> => {
     messages: [],
   })
   const savedUser = await user.save()
-  return getUserDTOFromUser(savedUser)
+  return generateFullUserDTO(savedUser)
 }
 
 export const getUser = async (id: string): Promise<UserDTO> => {
@@ -52,5 +57,5 @@ export const editUser = async (id: string, userDTO: UserDTO) => {
   dbUser.avatarUrl = { ...userDTO.avatarUrl }
   dbUser.description = { ...userDTO.description }
   const savedUser = await dbUser.save()
-  return getUserDTOFromUser(savedUser)
+  return generateFullUserDTO(savedUser)
 }

@@ -7,11 +7,18 @@ import userRoutes from './routes/user'
 import authRouter from './routes/auth'
 import { generateJwt, validateJwt } from './jwt/jwt'
 import httpContext from 'express-http-context'
+import messageRouter from './routes/message'
+import { User } from './model/user'
+import interactionsRouter from './routes/interactions'
 
 const initialize = async () => {
   const app = express()
 
-  app.use(cors())
+  app.use(
+    cors({
+      exposedHeaders: 'authentication',
+    })
+  )
   app.use(json())
   app.use(httpContext.middleware)
 
@@ -25,8 +32,14 @@ const initialize = async () => {
       const id = validateJwt(token)
       const newJwt = generateJwt(id)
       res.setHeader('authentication', newJwt)
-      httpContext.set('userId', id)
-      next()
+      User.findById(id)
+        .then((user) => {
+          httpContext.set('loggedUser', user)
+          next()
+        })
+        .catch(() => {
+          throw new Error()
+        })
     } catch (err) {
       const newErr = new Error('Invalid authentication.')
       httpContext.set('status-code', 403)
@@ -35,6 +48,8 @@ const initialize = async () => {
   })
 
   app.use('/user', userRoutes)
+  app.use('/user/message', messageRouter)
+  app.use('/user/interaction', interactionsRouter)
   app.use('/login', authRouter)
 
   app.use((err, req, res, next) => {
