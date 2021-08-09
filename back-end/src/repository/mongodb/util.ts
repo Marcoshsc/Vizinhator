@@ -17,28 +17,45 @@ export const getUserDTOFromUser = (savedUser: any): UserDTO => {
   const loggedUserWantsCloseFriend = loggedUser.closeFriendsIds.includes(
     savedUser._id.toString()
   )
+  console.log(`${savedWantsCloseFriend} - ${loggedUserWantsCloseFriend}`)
+  const closeFriends = savedWantsCloseFriend && loggedUserWantsCloseFriend
   return {
     id: savedUser._id,
     password: undefined,
     email: undefined,
     avatarUrl: {
-      value: savedUser.avatarUrl.value,
+      value:
+        savedUser.avatarUrl.hide && !closeFriends
+          ? undefined
+          : savedUser.avatarUrl.value,
       hide: savedUser.avatarUrl.hide,
     },
     cellphone: {
-      value: savedUser.cellphone.value,
+      value:
+        savedUser.cellphone.hide && !closeFriends
+          ? undefined
+          : savedUser.cellphone.value,
       hide: savedUser.cellphone.hide,
     },
     occupation: {
-      value: savedUser.occupation.value,
+      value:
+        savedUser.occupation.hide && !closeFriends
+          ? undefined
+          : savedUser.occupation.value,
       hide: savedUser.occupation.hide,
     },
     available: {
-      value: savedUser.available.value,
+      value:
+        savedUser.available.hide && !closeFriends
+          ? undefined
+          : savedUser.available.value,
       hide: savedUser.available.hide,
     },
     description: {
-      value: savedUser.description.value,
+      value:
+        savedUser.description.hide && !closeFriends
+          ? undefined
+          : savedUser.description.value,
       hide: savedUser.description.hide,
     },
     closeFriend:

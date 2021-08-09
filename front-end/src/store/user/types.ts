@@ -20,7 +20,7 @@ export interface User {
   available?: FieldValue
   description?: FieldValue
   position: [number, number]
-  closeFriend?: boolean
+  closeFriend?: "no" | "yes" | "you-requested" | "he-requested"
   liked?: boolean
   disliked?: boolean
   messages?: Message[]
@@ -52,6 +52,12 @@ export enum UserActions {
   SIGN_UP_INTERN = "@user/SIGN_UP_INTERN",
   FETCH_NEIGHBOURS = "@user/FETCH_NEIGHBOURS",
   FETCH_NEIGHBOURS_INTERN = "@user/FETCH_NEIGHBOURS_INTERN",
+  EDIT_USER = "@user/EDIT_USER",
+  EDIT_USER_INTERN = "@user/EDIT_USER_INTERN",
+  LIKE_USER = "@user/LIKE_USER",
+  DISLIKE_USER = "@user/DISLIKE_USER",
+  CLOSE_FRIEND_REQUEST = "@user/CLOSE_FRIEND_REQUEST",
+  UPDATE_NOTLOGGED_USER = "@user/UPDATE_NOTLOGGED_USER",
 }
 
 export interface UserState {

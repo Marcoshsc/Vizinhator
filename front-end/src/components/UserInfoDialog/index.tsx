@@ -17,7 +17,13 @@ import React, {
   useState,
 } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { selectUser, sendMessage } from "../../store/user/actions"
+import {
+  closeFriendRequest,
+  dislikeUser,
+  likeUser,
+  selectUser,
+  sendMessage,
+} from "../../store/user/actions"
 import { getSelectedUser } from "../../store/user/selectors"
 import { FieldValue, Message, User } from "../../store/user/types"
 import { FaPhoneAlt, FaUserFriends, FaWindowClose } from "react-icons/fa"
@@ -34,6 +40,7 @@ const LikeDislikeIcon: FC<{
   icon: ReactNode
   active: boolean
   title: string
+  onClick(): void
 }> = (props) => {
   const getColor = useCallback(
     () => (props.active ? "blue" : "black"),
@@ -69,13 +76,22 @@ const LikeDislikeIcon: FC<{
 
   return (
     <Tooltip title={props.title} className={styles.tooltip}>
-      <div>{newIcon as any}</div>
+      <div onClick={props.onClick}>{newIcon as any}</div>
     </Tooltip>
   )
 }
 
 const Title: FC<{ user: User; handleClose(): void }> = (props) => {
   const user = props.user
+  const dispatch = useDispatch()
+
+  const handleLike = () => {
+    dispatch(likeUser(user.id as string))
+  }
+
+  const handleDislike = () => {
+    dispatch(dislikeUser(user.id as string))
+  }
 
   return (
     <div className={styles["dialog-title"]}>
@@ -86,11 +102,13 @@ const Title: FC<{ user: User; handleClose(): void }> = (props) => {
           title={`Like ${user.name}`}
           active={!!user.liked}
           icon={<BiLike />}
+          onClick={handleLike}
         />
         <LikeDislikeIcon
           title={`Dislike ${user.name}`}
           active={!!user.disliked}
           icon={<BiDislike />}
+          onClick={handleDislike}
         />
         <Tooltip title={`Block ${user.name}`} className={styles.tooltip}>
           <div>
@@ -107,24 +125,41 @@ const Title: FC<{ user: User; handleClose(): void }> = (props) => {
 
 const CloseFriends: FC<{ user: User }> = (props) => {
   const user = props.user
+  const dispatch = useDispatch()
+
+  const handleCloseFriend = () => {
+    dispatch(closeFriendRequest(user.id as string))
+  }
 
   const closeFriendIcon = user.closeFriend ? (
     <FaUserFriends />
   ) : (
     <FaWindowClose />
   )
-  const closeFriendText = user.closeFriend
-    ? `You and ${user.name} are close friends.`
-    : `${user.name} is not a close friend.`
+  const getCloseFriendText = () => {
+    if (user.closeFriend === "yes") {
+      return `You and ${user.name} are close friends.`
+    }
+    if (user.closeFriend === "no") {
+      return `${user.name} is not a close friend.`
+    }
+    if (user.closeFriend === "he-requested") {
+      return `${user.name} requested to be your close friend.`
+    }
+    if (user.closeFriend === "you-requested") {
+      return `You requested to be a close friend of ${user.name}.`
+    }
+  }
 
   return (
     <div className={styles["close-friends-container"]}>
       {closeFriendIcon}
-      <Typography>{closeFriendText}</Typography>
-      {!user.closeFriend && (
+      <Typography>{getCloseFriendText()}</Typography>
+      {(user.closeFriend === "no" || user.closeFriend === "he-requested") && (
         <Button
           variant="text"
           color="primary"
+          onClick={handleCloseFriend}
         >{`Request to be ${user.name}'s close friend`}</Button>
       )}
     </div>
@@ -136,9 +171,11 @@ const PersonalInfoItem: FC<{
   value?: FieldValue
   valueString?: string
   field: string
+  user: User
 }> = (props) => {
   if (!props.value && !props.valueString) return null
-  if (props.value && props.value.hide) return null
+  if (props.value && props.value.hide && props.user.closeFriend !== "yes")
+    return null
 
   const valueToUse = props.valueString || props.value?.value
   return (
@@ -169,11 +206,13 @@ const PersonalInfo: FC<{ user: User }> = (props) => {
           field="User description"
           icon={<BsPeopleCircle />}
           value={user.description}
+          user={user}
         />
 
         <PersonalInfoItem
           field="Register time at this address"
           icon={<IoMdCalendar />}
+          user={user}
           valueString={`Since ${formatDate(user.since)}`}
         />
 
@@ -181,18 +220,21 @@ const PersonalInfo: FC<{ user: User }> = (props) => {
           field="Phone number"
           icon={<FaPhoneAlt />}
           value={user.cellphone}
+          user={user}
         />
 
         <PersonalInfoItem
           field="User Occupation"
           icon={<MdWork />}
           value={user.occupation}
+          user={user}
         />
 
         <PersonalInfoItem
           field="Available hours for calls"
           icon={<BiTime />}
           value={user.available}
+          user={user}
         />
       </div>
     </div>

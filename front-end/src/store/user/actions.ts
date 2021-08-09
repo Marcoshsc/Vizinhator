@@ -42,3 +42,17 @@ export const fetchNeighbours = () => action(UserActions.FETCH_NEIGHBOURS, {})
 
 export const fetchNeighboursIntern = (users: User[]) =>
   action(UserActions.FETCH_NEIGHBOURS_INTERN, { users })
+
+export const editUser = (user: User) => action(UserActions.EDIT_USER, { user })
+
+export const editUserIntern = (user: User) =>
+  action(UserActions.EDIT_USER_INTERN, { user })
+
+export const likeUser = (id: string) => action(UserActions.LIKE_USER, { id })
+export const dislikeUser = (id: string) =>
+  action(UserActions.DISLIKE_USER, { id })
+export const closeFriendRequest = (id: string) =>
+  action(UserActions.CLOSE_FRIEND_REQUEST, { id })
+
+export const updateNotLoggedUser = (id: string, user: User) =>
+  action(UserActions.UPDATE_NOTLOGGED_USER, { id, user })

@@ -69,12 +69,13 @@ export const getDTOFromUser = (user: User): UserDTO => {
 export const getUserFromDTO = (user: UserDTO): User => {
   return {
     id: user.id as string,
-    closeFriend: !!user.closeFriend,
+    closeFriend: user.closeFriend,
     disliked: !!user.disliked,
     liked: !!user.liked,
     likes: user.likes as number,
     dislikes: user.dislikes as number,
     name: user.name,
+    email: user.email,
     position: user.location.coordinates,
     since: user.since ? new Date(user.since) : undefined,
     available: user.available,

@@ -1,10 +1,11 @@
 import httpContext from 'express-http-context'
-import { User } from '../../model/user'
+import { User, UserDTO } from '../../model/user'
+import { getUserDTOFromUser } from './util'
 
 export const likeOrDislikeUser = async (
   userId: string,
   like: boolean
-): Promise<void> => {
+): Promise<UserDTO> => {
   const loggedUser = httpContext.get('loggedUser')
   const loggedUserId = loggedUser._id.toString()
   const user = await User.findById(userId)
@@ -16,16 +17,19 @@ export const likeOrDislikeUser = async (
   } else {
     arrayToBeUsed.splice(index, 1)
   }
-  await user.save()
+  const savedUser = await user.save()
+  return getUserDTOFromUser(savedUser)
 }
 
-export const closeFriend = async (userId: string): Promise<void> => {
+export const closeFriend = async (userId: string): Promise<UserDTO> => {
   const loggedUser = httpContext.get('loggedUser')
-  const loggedUserId = loggedUser._id.toString()
   const user = await User.findById(userId)
-  if (user.closeFriendsIds.includes(loggedUserId)) {
-    return
+  const userIdDatabase = user._id.toString()
+  if (loggedUser.closeFriendsIds.includes(userIdDatabase)) {
+    return getUserDTOFromUser(user)
   }
-  user.closeFriendsIds.push(loggedUserId)
-  await user.save()
+  loggedUser.closeFriendsIds.push(userIdDatabase)
+  const savedUser = await loggedUser.save()
+  httpContext.set('loggedUser', savedUser)
+  return getUserDTOFromUser(user)
 }

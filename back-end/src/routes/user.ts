@@ -33,10 +33,9 @@ userRoutes.get('/:id', (req, res) => {
   })
 })
 
-userRoutes.put('/:id', (req, res) => {
-  const id: string = req.params.id
+userRoutes.put('/', (req, res) => {
   const userDTO = req.body
-  editUser(id, userDTO).then((user) => {
+  editUser(userDTO).then((user) => {
     res.json(user)
   })
 })

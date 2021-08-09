@@ -62,6 +62,21 @@ const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
         signup: false,
       }
     }
+    case UserActions.EDIT_USER_INTERN: {
+      return {
+        ...state,
+        logged: action.payload.user,
+      }
+    }
+    case UserActions.UPDATE_NOTLOGGED_USER: {
+      return {
+        ...state,
+        users: [
+          ...state.users.filter((el) => el.id !== action.payload.id),
+          action.payload.user,
+        ],
+      }
+    }
     case UserActions.FETCH_NEIGHBOURS_INTERN: {
       return { ...state, users: action.payload.users }
     }

@@ -12,11 +12,13 @@ import React, {
   ChangeEvent,
   FC,
   PropsWithChildren,
+  useCallback,
   useEffect,
   useState,
 } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
+  editUser,
   showProfile,
   signUp,
   startChangingLocation,
@@ -122,15 +124,15 @@ const ProfilePage: FC = () => {
 
   useEffect(() => {
     setEditing(signup)
-    console.log(signup)
   }, [signup])
 
-  useEffect(() => {
+  const resetFields = useCallback(() => {
     if (!loggedUser) return
     setPhone(loggedUser.cellphone?.value || "")
     setHidePhone(loggedUser.cellphone?.hide || false)
 
     setEmail(loggedUser.email || "")
+    setName(loggedUser.name || "")
 
     setOccupation(loggedUser.occupation?.value || "")
     setHideOccupation(loggedUser.occupation?.hide || false)
@@ -145,12 +147,48 @@ const ProfilePage: FC = () => {
     setHideAvatarUrl(loggedUser.avatarUrl?.hide || false)
   }, [loggedUser])
 
+  useEffect(() => {
+    resetFields()
+  }, [resetFields])
+
   const handleClose = () => {
     dispatch(showProfile(false))
   }
 
-  const handleSubmit = () => {
-    alert("submit")
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault()
+    if (!loggedUser) return
+    dispatch(
+      editUser({
+        name,
+        email,
+        password,
+        available: {
+          hide: hideAvailable,
+          value: available,
+        },
+        position: selectedLocation
+          ? selectedLocation.location
+          : loggedUser.position,
+        avatarUrl: {
+          hide: hideAvatarUrl,
+          value: avatarUrl,
+        },
+        cellphone: {
+          hide: hidePhone,
+          value: phone,
+        },
+        description: {
+          hide: hideDescription,
+          value: description,
+        },
+        occupation: {
+          hide: hideOccupation,
+          value: occupation,
+        },
+      })
+    )
+    setEditing(false)
   }
 
   const handleCreateProfile = () => {
@@ -186,9 +224,12 @@ const ProfilePage: FC = () => {
     setEditing(false)
   }
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
+    if (editing) {
+      resetFields()
+    }
     setEditing(!editing)
-  }
+  }, [editing, resetFields])
 
   const handleNotEdit = () => {
     setEditing(false)
@@ -237,6 +278,7 @@ const ProfilePage: FC = () => {
                 placeholder="Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                disabled={!editing}
                 fullWidth
               />
             </div>
@@ -246,6 +288,7 @@ const ProfilePage: FC = () => {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={!editing}
                 fullWidth
               />
             </div>
@@ -306,11 +349,7 @@ const ProfilePage: FC = () => {
             label="Description"
             editing={editing}
           />
-          {!signup && (
-            <Button type="submit" onClick={handleSubmit}>
-              Submit
-            </Button>
-          )}
+          {!signup && <Button type="submit">Submit</Button>}
         </form>
       </DialogContent>
       <DialogActions className={styles.actions}>

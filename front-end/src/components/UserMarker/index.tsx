@@ -37,20 +37,25 @@ interface SimplePopupItemProps {
   value?: FieldValue
   title: string
   icon: ReactNode
+  user: User
 }
 
 const SimplePopupItem: FC<SimplePopupItemProps> = (props) => {
   if (!props.value && !props.valueString) return null
-  if (props.value && props.value.hide) return null
+  if (props.value && props.value.hide && props.user.closeFriend !== "yes")
+    return null
 
   const valueToUse = props.valueString || props.value?.value
   return (
-    <Tooltip title={props.title}>
-      <div className={styles["popup-item"]}>
-        {props.icon}
-        <Typography>{valueToUse}</Typography>
-      </div>
-    </Tooltip>
+    <>
+      <Tooltip title={props.title}>
+        <div className={styles["popup-item"]}>
+          {props.icon}
+          <Typography>{valueToUse}</Typography>
+        </div>
+      </Tooltip>
+      <Divider />
+    </>
   )
 }
 
@@ -123,32 +128,32 @@ const UserMarker: FC<UserMarkerProps> = ({ user }) => {
           title="User description"
           icon={<BsPeopleCircle />}
           value={user.description}
+          user={user}
         />
-        <Divider />
         <SimplePopupItem
           title="Register time at this address"
           icon={<IoMdCalendar />}
           valueString={`Since ${formatDate(user.since)}`}
+          user={user}
         />
-        <Divider />
         <SimplePopupItem
           title="Phone number"
           icon={<FaPhoneAlt />}
           value={user.cellphone}
+          user={user}
         />
-        <Divider />
         <SimplePopupItem
           title="User Occupation"
           icon={<MdWork />}
           value={user.occupation}
+          user={user}
         />
-        <Divider />
         <SimplePopupItem
           title="Available hours for calls"
           icon={<BiTime />}
           value={user.available}
+          user={user}
         />
-        <Divider />
         <CustomPopupItem
           title="Likes/Dislikes received from other users"
           additionalClasses={[styles["centerized-flex"]]}

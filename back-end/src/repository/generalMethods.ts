@@ -18,11 +18,8 @@ export const addUser = async (userDTO: UserDTO): Promise<UserDTO> => {
   return mongoDBAddUser(userDTO)
 }
 
-export const editUser = async (
-  id: string,
-  userDTO: UserDTO
-): Promise<UserDTO> => {
-  return mongoDBEditUser(id, userDTO)
+export const editUser = async (userDTO: UserDTO): Promise<UserDTO> => {
+  return mongoDBEditUser(userDTO)
 }
 
 export const getUser = async (id: string): Promise<UserDTO> => {
@@ -40,16 +37,16 @@ export const sendMessageToUser = async (user: string, content: string) => {
   return await sendMessage(user, content)
 }
 
-export const likeUser = async (user: string) => {
-  await likeOrDislikeUser(user, true)
+export const likeUser = async (user: string): Promise<UserDTO> => {
+  return await likeOrDislikeUser(user, true)
 }
 
-export const dislikeUser = async (user: string) => {
-  await likeOrDislikeUser(user, false)
+export const dislikeUser = async (user: string): Promise<UserDTO> => {
+  return await likeOrDislikeUser(user, false)
 }
 
-export const closeFriendUser = async (user: string) => {
-  await closeFriend(user)
+export const closeFriendUser = async (user: string): Promise<UserDTO> => {
+  return await closeFriend(user)
 }
 
 export const getNearUsers = async (): Promise<UserDTO[]> => {
