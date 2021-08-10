@@ -14,8 +14,6 @@ export const signIn = async (
 ): Promise<SignInResponse> => {
   const response = await axios.post(`${env.baseUrl}/login`, { email, password })
   const token = response.headers["authentication"]
-  console.log(response.headers)
-  console.log(token)
   const user = getUserFromDTO(response.data)
   return {
     token,

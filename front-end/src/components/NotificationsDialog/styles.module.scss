@@ -1,0 +1,21 @@
+@import '../../styles/flex.scss';
+@import '../../styles/utils.scss';
+
+.content {
+  @include flex-column(0px, flex-start, flex-start);
+  width: 100%;
+  .notification {
+    @include flex-row(10px, flex-start, center);
+    width: 100%;
+    padding: 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+    p {
+      flex-grow: 1;
+    }
+    &:hover {
+      background-color: rgba(0,0,0,0.05);
+      cursor: pointer;
+      transition: all 300ms;
+    }
+  }
+}

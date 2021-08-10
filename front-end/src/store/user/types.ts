@@ -8,6 +8,13 @@ export interface Address {
   location: [number, number]
 }
 
+export interface Notification {
+  content: string
+  user: string
+  id: string
+  moment: Date
+}
+
 export interface User {
   id?: string
   name: string
@@ -29,16 +36,16 @@ export interface User {
 }
 
 export interface Message {
-  id: string
+  id?: string
   body: string
-  logged: boolean
-  sender: string
-  receiver: string
-  sentAt: Date
+  sender?: string
+  receiver?: string
+  sentAt?: Date
 }
 
 export enum UserActions {
   SELECT_USER = "@user/SELECT_USER",
+  SELECT_USER_STRING = "@user/SELECT_USER_STRING",
   SEND_MESSAGE = "@user/SEND_MESSAGE",
   SHOW_PROFILE = "@user/SHOW_PROFILE",
   CHANGE_LOCATION = "@user/CHANGE_LOCATION",
@@ -58,6 +65,11 @@ export enum UserActions {
   DISLIKE_USER = "@user/DISLIKE_USER",
   CLOSE_FRIEND_REQUEST = "@user/CLOSE_FRIEND_REQUEST",
   UPDATE_NOTLOGGED_USER = "@user/UPDATE_NOTLOGGED_USER",
+  GET_NOTIFICATIONS = "@user/GET_NOTIFICATIONS",
+  GET_NOTIFICATIONS_INTERN = "@user/GET_NOTIFICATIONS_INTERN",
+  SHOW_NOTIFICATIONS = "@user/SHOW_NOTIFICATIONS",
+  READ_NOTIFICATION = "@user/READ_NOTIFICATION",
+  LOGOUT = "@user/LOGOUT",
 }
 
 export interface UserState {
@@ -72,4 +84,6 @@ export interface UserState {
   firstAccess: boolean
   signup: boolean
   login: boolean
+  showingNotifications: boolean
+  notifications: Notification[]
 }

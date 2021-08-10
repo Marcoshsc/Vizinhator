@@ -1,8 +1,13 @@
 import { action } from "typesafe-actions"
 import { Address, Message, User, UserActions } from "./types"
 
+export const logout = () => action(UserActions.LOGOUT, {})
+
 export const selectUser = (user: User | undefined) =>
   action(UserActions.SELECT_USER, { user })
+
+export const selectUserId = (user: string) =>
+  action(UserActions.SELECT_USER_STRING, { user })
 
 export const sendMessage = (user: User, message: Message) =>
   action(UserActions.SEND_MESSAGE, { user, message })
@@ -56,3 +61,13 @@ export const closeFriendRequest = (id: string) =>
 
 export const updateNotLoggedUser = (id: string, user: User) =>
   action(UserActions.UPDATE_NOTLOGGED_USER, { id, user })
+
+export const getNotifications = () => action(UserActions.GET_NOTIFICATIONS, {})
+export const getNotificationsIntern = (notifications: Notification[]) =>
+  action(UserActions.GET_NOTIFICATIONS_INTERN, { notifications })
+
+export const showNotifications = (value: boolean) =>
+  action(UserActions.SHOW_NOTIFICATIONS, { value })
+
+export const readNotification = (id: string) =>
+  action(UserActions.READ_NOTIFICATION, { id })

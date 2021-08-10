@@ -1,4 +1,4 @@
-import { MessageDTO, User, UserDTO } from '../../model/user'
+import { MessageDTO, NotificationDTO, User, UserDTO } from '../../model/user'
 import httpContext from 'express-http-context'
 
 export const generateMessageDTOFromMessage = (message: any): MessageDTO => {
@@ -10,6 +10,17 @@ export const generateMessageDTOFromMessage = (message: any): MessageDTO => {
   }
 }
 
+export const getNotificationDTOFromNotification = (
+  notification: any
+): NotificationDTO => {
+  return {
+    id: `${notification._id}`,
+    content: notification.content,
+    user: notification.user,
+    moment: notification.moment,
+  }
+}
+
 export const getUserDTOFromUser = (savedUser: any): UserDTO => {
   const loggedUser = httpContext.get('loggedUser')
   const loggedUserId = loggedUser._id.toString()
@@ -17,7 +28,6 @@ export const getUserDTOFromUser = (savedUser: any): UserDTO => {
   const loggedUserWantsCloseFriend = loggedUser.closeFriendsIds.includes(
     savedUser._id.toString()
   )
-  console.log(`${savedWantsCloseFriend} - ${loggedUserWantsCloseFriend}`)
   const closeFriends = savedWantsCloseFriend && loggedUserWantsCloseFriend
   return {
     id: savedUser._id,

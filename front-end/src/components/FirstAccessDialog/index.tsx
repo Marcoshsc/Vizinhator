@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from "react"
+import { FC, ReactNode } from "react"
 import {
   AiOutlineHome,
   AiOutlineSearch,
@@ -13,7 +13,6 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  TextField,
   Typography,
 } from "@material-ui/core"
 import styles from "./FirstAccessDialog.module.scss"

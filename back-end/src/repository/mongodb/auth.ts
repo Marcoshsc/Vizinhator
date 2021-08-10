@@ -36,7 +36,7 @@ export const generateFullUserDTO = (savedUser: any) => {
     since: savedUser.since,
     likes: savedUser.likedBy.length,
     dislikes: savedUser.dislikedBy.length,
-    messages: savedUser.messages.map(generateMessageDTOFromMessage),
+    messages: [],
     location: savedUser.position,
     name: savedUser.name,
   }

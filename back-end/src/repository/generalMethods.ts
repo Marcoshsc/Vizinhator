@@ -1,4 +1,4 @@
-import { UserDTO } from '../model/user'
+import { NotificationDTO, UserDTO } from '../model/user'
 import { authenticate } from './mongodb/auth'
 import {
   addUser as mongoDBAddUser,
@@ -7,6 +7,7 @@ import {
 } from './mongodb/insert'
 import { closeFriend, likeOrDislikeUser } from './mongodb/interaction'
 import { sendMessage } from './mongodb/message'
+import { getNotifications, readNotification } from './mongodb/notification'
 import { searchNearUsers } from './mongodb/search'
 
 export interface AuthResponse {
@@ -51,4 +52,12 @@ export const closeFriendUser = async (user: string): Promise<UserDTO> => {
 
 export const getNearUsers = async (): Promise<UserDTO[]> => {
   return await searchNearUsers()
+}
+
+export const getUserNotifications = async (): Promise<NotificationDTO[]> => {
+  return await getNotifications()
+}
+
+export const readUserNotification = async (id: string) => {
+  return await readNotification(id)
 }

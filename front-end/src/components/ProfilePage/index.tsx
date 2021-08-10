@@ -32,11 +32,9 @@ import {
 } from "../../store/user/selectors"
 import { FaPhoneAlt } from "react-icons/fa"
 import { MdWork } from "react-icons/md"
-import { BiTime } from "react-icons/bi"
 import { IoMdCalendar } from "react-icons/io"
 import { BsPeopleCircle } from "react-icons/bs"
 import styles from "./ProfilePage.module.scss"
-import { FormikHelpers, useFormik } from "formik"
 import { IoLocationSharp } from "react-icons/io5"
 
 interface ProfileItemProps {
@@ -222,6 +220,7 @@ const ProfilePage: FC = () => {
       })
     )
     setEditing(false)
+    dispatch(showProfile(false))
   }
 
   const handleEdit = useCallback(() => {

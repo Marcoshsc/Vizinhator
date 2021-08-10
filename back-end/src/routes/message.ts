@@ -7,7 +7,7 @@ messageRouter.post('/:userId', (req, res, next) => {
   const { content } = req.body
   const { userId } = req.params
   sendMessageToUser(userId, content)
-    .then(() => res.status(200).send())
+    .then((user) => res.status(200).send(user))
     .catch((err) => next(err))
 })
 

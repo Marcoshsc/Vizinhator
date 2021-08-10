@@ -28,3 +28,11 @@ export const getSelectedUser = createSelector(
 )
 
 export const isSignup = ({ user }: ApplicationState) => user.signup
+
+export const getToken = ({ user }: ApplicationState) => user.token
+
+export const getNotifications = ({ user }: ApplicationState) =>
+  user.notifications
+
+export const isShowingNotifications = ({ user }: ApplicationState) =>
+  user.showingNotifications

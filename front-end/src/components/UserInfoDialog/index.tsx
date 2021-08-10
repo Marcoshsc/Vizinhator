@@ -24,7 +24,7 @@ import {
   selectUser,
   sendMessage,
 } from "../../store/user/actions"
-import { getSelectedUser } from "../../store/user/selectors"
+import { getLoggedUser, getSelectedUser } from "../../store/user/selectors"
 import { FieldValue, Message, User } from "../../store/user/types"
 import { FaPhoneAlt, FaUserFriends, FaWindowClose } from "react-icons/fa"
 import styles from "./UserInfo.module.scss"
@@ -96,7 +96,12 @@ const Title: FC<{ user: User; handleClose(): void }> = (props) => {
   return (
     <div className={styles["dialog-title"]}>
       <div className={styles["dialog-title-content"]}>
-        {user.avatarUrl && <img src={user.avatarUrl.value} alt="User Avatar" />}
+        {user.avatarUrl && (
+          <img
+            src={user.avatarUrl.value || "no-avatar.png"}
+            alt="User Avatar"
+          />
+        )}
         <Typography component="h2">{user.name}</Typography>
         <LikeDislikeIcon
           title={`Like ${user.name}`}
@@ -250,11 +255,6 @@ const MessageInput: FC<{ user: User }> = (props) => {
     dispatch(
       sendMessage(props.user, {
         body: message,
-        logged: true,
-        sentAt: new Date(),
-        sender: "",
-        receiver: "",
-        id: Math.floor(Math.random() * 10000).toString(),
       })
     )
     setMessage("")
@@ -294,13 +294,20 @@ const MessageInput: FC<{ user: User }> = (props) => {
 
 const MessagesList: FC<{ user: User }> = (props) => {
   const user = props.user
+  const loggedUser = useSelector(getLoggedUser)
   const [reversedMessages, setReversedMessages] = useState<Message[]>([])
 
   useEffect(() => {
     if (!user.messages) return
     const messagesCopy = Array.from(user.messages)
-    setReversedMessages(messagesCopy.reverse())
+    setReversedMessages(
+      messagesCopy.sort(
+        (a, b) => (b.sentAt as Date).getTime() - (a.sentAt as Date).getTime()
+      )
+    )
   }, [user])
+
+  if (!loggedUser) return null
 
   return (
     <div className={styles["messages-body-container"]}>
@@ -309,14 +316,14 @@ const MessagesList: FC<{ user: User }> = (props) => {
           key={message.id}
           className={clsx(
             styles["message-layer"],
-            message.logged
+            message.sender === loggedUser.id
               ? styles["message-layer-from-logged-user"]
               : styles["message-layer-from-other-user"]
           )}
         >
           <div className={styles["message-container"]}>
             <p className={styles["message-title"]}>
-              {message.logged ? "You" : user.name}
+              {message.sender === loggedUser.id ? "You" : user.name}
             </p>
             <Divider />
             <p className={styles["message-body"]}>{message.body}</p>

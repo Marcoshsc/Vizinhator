@@ -45,7 +45,6 @@ export const getMessageFromDTO = (message: MessageDTO): Message => {
     receiver: message.receiver,
     sender: message.sender,
     sentAt: new Date(message.sentAt),
-    logged: false,
   }
 }
 

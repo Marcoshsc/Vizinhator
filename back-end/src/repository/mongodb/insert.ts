@@ -4,6 +4,28 @@ import bcrypt from 'bcrypt'
 import { generateFullUserDTO } from './auth'
 import httpContext from 'express-http-context'
 
+const getNearUsers = async (savedUser: any) => {
+  return await User.find({
+    _id: {
+      $ne: savedUser._id,
+    },
+    position: {
+      $near: {
+        $geometry: savedUser.position,
+        $maxDistance: 400,
+      },
+    },
+  })
+}
+
+const notifyNearUsers = async (savedUser: any, notification: any) => {
+  const nearUsers = await getNearUsers(savedUser)
+  nearUsers.forEach(async (user) => {
+    user.notifications.push(notification)
+    await user.save()
+  })
+}
+
 export const addUser = async (userDTO: UserDTO): Promise<UserDTO> => {
   if (!userDTO.password || !userDTO.email) {
     throw new Error('No password or email provided.')
@@ -40,6 +62,14 @@ export const addUser = async (userDTO: UserDTO): Promise<UserDTO> => {
     messages: [],
   })
   const savedUser = await user.save()
+
+  const notification = {
+    user: savedUser._id,
+    content: `You have a new neighbour: ${user.name}!`,
+    moment: new Date(),
+  }
+  notifyNearUsers(savedUser, notification)
+
   return generateFullUserDTO(savedUser)
 }
 

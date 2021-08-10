@@ -1,10 +1,11 @@
 import httpContext from 'express-http-context'
-import { Message, User } from '../../model/user'
+import { Message, User, UserDTO } from '../../model/user'
+import { getUserDTOFromUser } from './util'
 
 export const sendMessage = async (
   userId: string,
   content: string
-): Promise<void> => {
+): Promise<UserDTO> => {
   const loggedUser = httpContext.get('loggedUser')
   const user = await User.findById(userId)
   const message = new Message({
@@ -13,6 +14,9 @@ export const sendMessage = async (
     sentAt: new Date(),
     content: content,
   })
+  loggedUser.messages.push(message)
   user.messages.push(message)
-  await user.save()
+  const savedUser = await loggedUser.save()
+  httpContext.set('loggedUser', savedUser)
+  return getUserDTOFromUser(await user.save())
 }

@@ -20,7 +20,7 @@ const getAvatarIcon = (
   avatarUrl: string = "no-avatar.png"
 ): L.Icon => {
   return L.icon({
-    iconUrl: avatarUrl,
+    iconUrl: avatarUrl || "no-avatar.png",
     iconSize: [size, size],
     iconAnchor: [0, 0],
     popupAnchor: [size / 2, size / 2],
@@ -95,7 +95,7 @@ const PopupTitle: FC<PopupTitleProps> = (props) => {
           className={styles["avatar"]}
           width={20}
           height={20}
-          src={user.avatarUrl.value}
+          src={user.avatarUrl?.value || "no-avatar.png"}
           alt="User Avatar"
         />
       )}

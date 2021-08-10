@@ -56,6 +56,19 @@ export interface GeoJSON {
   coordinates: [number, number]
 }
 
+const notificationSchema = new mongoose.Schema({
+  user: { type: String, required: true },
+  content: { type: String, required: true },
+  moment: { type: Date, required: true },
+})
+
+export interface NotificationDTO {
+  id: string
+  user: string
+  content: string
+  moment: Date
+}
+
 const userSchema = new mongoose.Schema({
   position: {
     type: pointSchema,
@@ -75,6 +88,7 @@ const userSchema = new mongoose.Schema({
   messages: { type: [messageSchema], required: true },
   password: { type: String, required: true },
   email: { type: String, required: true },
+  notifications: { type: [notificationSchema] },
 })
 
 export interface FieldValue {

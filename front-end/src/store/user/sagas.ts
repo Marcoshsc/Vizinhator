@@ -8,16 +8,21 @@ import {
   likeUser,
 } from "../../services/interaction"
 import { signIn, SignInResponse } from "../../services/login"
+import { sendMessage } from "../../services/message"
+import {
+  fetchNotifications,
+  readNotification,
+} from "../../services/notifications"
 import { signUp } from "../../services/signup"
 import {
   signInIntern,
   signUpIntern,
   fetchNeighboursIntern,
-  fetchNeighbours as fetchNeighboursAction,
   editUserIntern,
   updateNotLoggedUser,
+  getNotificationsIntern,
 } from "./actions"
-import { User, UserActions } from "./types"
+import { Message, User, UserActions } from "./types"
 
 export default function* userSagas() {
   yield takeLatest(UserActions.SIGN_IN, signInSaga)
@@ -27,6 +32,9 @@ export default function* userSagas() {
   yield takeLatest(UserActions.LIKE_USER, likeUserSaga)
   yield takeLatest(UserActions.DISLIKE_USER, dislikeUserSaga)
   yield takeLatest(UserActions.CLOSE_FRIEND_REQUEST, closeFriendRequestSaga)
+  yield takeLatest(UserActions.SEND_MESSAGE, sendMessageSaga)
+  yield takeLatest(UserActions.GET_NOTIFICATIONS, getNotificationsSaga)
+  yield takeLatest(UserActions.READ_NOTIFICATION, readNotificationSaga)
 }
 
 function* signInSaga(action: AnyAction) {
@@ -34,7 +42,6 @@ function* signInSaga(action: AnyAction) {
     const { email, password } = action.payload
     const signInResponse: SignInResponse = yield call(signIn, email, password)
     yield put(signInIntern(signInResponse.token, signInResponse.user))
-    yield put(fetchNeighboursAction())
   } catch (err) {
     console.log(err)
   }
@@ -45,7 +52,6 @@ function* signUpSaga(action: AnyAction) {
     const { data } = action.payload
     const signUpResponse: SignInResponse = yield call(signUp, data)
     yield put(signUpIntern(signUpResponse.token, signUpResponse.user))
-    yield put(fetchNeighboursAction())
   } catch (err) {
     console.log(err)
   }
@@ -95,6 +101,40 @@ function* closeFriendRequestSaga(action: AnyAction) {
     const { id } = action.payload
     const savedUser: User = yield call(closeFriendRequest, id)
     yield put(updateNotLoggedUser(id, savedUser))
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+function* sendMessageSaga(action: AnyAction) {
+  try {
+    const user: User = action.payload.user
+    const message: Message = action.payload.message
+    const updatedUser: User = yield call(
+      sendMessage,
+      user.id as string,
+      message.body
+    )
+    yield put(updateNotLoggedUser(user.id as string, updatedUser))
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+function* getNotificationsSaga() {
+  try {
+    const notifications: Notification[] = yield call(fetchNotifications)
+    yield put(getNotificationsIntern(notifications))
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+function* readNotificationSaga(action: AnyAction) {
+  try {
+    const id: string = action.payload.id
+    const notifications: Notification[] = yield call(readNotification, id)
+    yield put(getNotificationsIntern(notifications))
   } catch (err) {
     console.log(err)
   }

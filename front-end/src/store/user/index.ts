@@ -1,5 +1,5 @@
 import { Reducer } from "redux"
-import { Message, User, UserActions, UserState } from "./types"
+import { User, UserActions, UserState } from "./types"
 
 const date = new Date()
 date.setDate(21)
@@ -14,6 +14,8 @@ const INITIAL_STATE: UserState = {
   login: false,
   users: [],
   signup: false,
+  showingNotifications: false,
+  notifications: [],
 }
 
 const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
@@ -21,6 +23,13 @@ const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
     case UserActions.SELECT_USER: {
       const user: User | undefined = action.payload.user
       return { ...state, selected: user?.id }
+    }
+    case UserActions.LOGOUT: {
+      return INITIAL_STATE
+    }
+    case UserActions.SELECT_USER_STRING: {
+      const user: string = action.payload.user
+      return { ...state, selected: user }
     }
     case UserActions.SIGNUP_STATE: {
       return { ...state, signup: action.payload.value }
@@ -32,19 +41,8 @@ const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
         changingLocationCallback: action.payload.callback,
       }
     }
-    case UserActions.SEND_MESSAGE: {
-      const message: Message = action.payload.message
-      const user: User = action.payload.user
-      const entityUser = state.users.find((el) => el.id === user.id) as User
-      if (!entityUser.messages) return { ...state }
-      entityUser.messages.push(message)
-      return {
-        ...state,
-        users: [
-          ...state.users.filter((el) => el.id !== user.id),
-          { ...entityUser, messages: [...entityUser.messages] },
-        ],
-      }
+    case UserActions.SHOW_NOTIFICATIONS: {
+      return { ...state, showingNotifications: action.payload.value }
     }
     case UserActions.SIGN_IN_INTERN: {
       return {
@@ -61,6 +59,9 @@ const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
         logged: action.payload.data,
         signup: false,
       }
+    }
+    case UserActions.GET_NOTIFICATIONS_INTERN: {
+      return { ...state, notifications: action.payload.notifications }
     }
     case UserActions.EDIT_USER_INTERN: {
       return {
