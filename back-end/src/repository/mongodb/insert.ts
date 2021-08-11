@@ -81,6 +81,8 @@ export const getUser = async (id: string): Promise<UserDTO> => {
 export const editUser = async (userDTO: UserDTO) => {
   const loggedUser = httpContext.get('loggedUser')
   const dbUser = await User.findById(loggedUser._id)
+  const previousLocation = dbUser.position.coordinates
+  const newLocation = userDTO.location.coordinates
   dbUser.position.coordinates = userDTO.location.coordinates
   dbUser.name = userDTO.name
   dbUser.cellphone = { ...userDTO.cellphone }
@@ -89,5 +91,16 @@ export const editUser = async (userDTO: UserDTO) => {
   dbUser.avatarUrl = { ...userDTO.avatarUrl }
   dbUser.description = { ...userDTO.description }
   const savedUser = await dbUser.save()
+  if (
+    previousLocation[0] !== newLocation[0] ||
+    previousLocation[1] !== newLocation[1]
+  ) {
+    const notification = {
+      user: savedUser._id,
+      content: `You have a new neighbour: ${savedUser.name}!`,
+      moment: new Date(),
+    }
+    notifyNearUsers(savedUser, notification)
+  }
   return generateFullUserDTO(savedUser)
 }

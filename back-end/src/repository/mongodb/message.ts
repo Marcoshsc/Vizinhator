@@ -16,6 +16,14 @@ export const sendMessage = async (
   })
   loggedUser.messages.push(message)
   user.messages.push(message)
+
+  const notification = {
+    user: loggedUser._id,
+    content: `${loggedUser.name} sent you a message!`,
+    moment: new Date(),
+  }
+
+  user.notifications.push(notification)
   const savedUser = await loggedUser.save()
   httpContext.set('loggedUser', savedUser)
   return getUserDTOFromUser(await user.save())
