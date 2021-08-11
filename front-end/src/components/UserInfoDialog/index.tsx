@@ -18,6 +18,7 @@ import React, {
 } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
+  blockUser,
   closeFriendRequest,
   dislikeUser,
   likeUser,
@@ -93,6 +94,11 @@ const Title: FC<{ user: User; handleClose(): void }> = (props) => {
     dispatch(dislikeUser(user.id as string))
   }
 
+  const handleBlock = () => {
+    dispatch(selectUser(undefined))
+    dispatch(blockUser(user.id as string))
+  }
+
   return (
     <div className={styles["dialog-title"]}>
       <div className={styles["dialog-title-content"]}>
@@ -116,7 +122,7 @@ const Title: FC<{ user: User; handleClose(): void }> = (props) => {
           onClick={handleDislike}
         />
         <Tooltip title={`Block ${user.name}`} className={styles.tooltip}>
-          <div>
+          <div onClick={handleBlock}>
             <BiBlock color="red" />
           </div>
         </Tooltip>

@@ -1,6 +1,6 @@
 import { User, UserDTO } from '../../model/user'
 import httpContext from 'express-http-context'
-import { getUserDTOFromUser } from './util'
+import { canInteract, getUserDTOFromUser } from './util'
 
 export async function searchNearUsers(): Promise<UserDTO[]> {
   const loggedUser = httpContext.get('loggedUser')
@@ -15,5 +15,7 @@ export async function searchNearUsers(): Promise<UserDTO[]> {
       },
     },
   })
-  return users.map(getUserDTOFromUser)
+  return users
+    .filter((el) => canInteract(el, loggedUser))
+    .map(getUserDTOFromUser)
 }

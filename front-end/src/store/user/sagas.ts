@@ -1,10 +1,21 @@
-import { call, put, takeLatest } from "@redux-saga/core/effects"
+import {
+  call,
+  cancel,
+  delay,
+  fork,
+  put,
+  select,
+  takeLatest,
+} from "@redux-saga/core/effects"
 import { AnyAction } from "redux"
+import { take } from "redux-saga/effects"
 import { editUser } from "../../services/edit"
 import { fetchNeighbours } from "../../services/fetch"
 import {
+  blockUser,
   closeFriendRequest,
   dislikeUser,
+  getBlockedUsers,
   likeUser,
 } from "../../services/interaction"
 import { signIn, SignInResponse } from "../../services/login"
@@ -21,8 +32,15 @@ import {
   editUserIntern,
   updateNotLoggedUser,
   getNotificationsIntern,
+  fetchNeighbours as fetchNeighboursAction,
+  getNotifications as getNotificationsAction,
+  getBlockedUsers as getBlockedUsersAction,
+  getBlockedUsersIntern,
+  stopSync,
+  sync,
 } from "./actions"
-import { Message, User, UserActions } from "./types"
+import { getToken } from "./selectors"
+import { BlockedUser, Message, User, UserActions } from "./types"
 
 export default function* userSagas() {
   yield takeLatest(UserActions.SIGN_IN, signInSaga)
@@ -35,6 +53,30 @@ export default function* userSagas() {
   yield takeLatest(UserActions.SEND_MESSAGE, sendMessageSaga)
   yield takeLatest(UserActions.GET_NOTIFICATIONS, getNotificationsSaga)
   yield takeLatest(UserActions.READ_NOTIFICATION, readNotificationSaga)
+  yield takeLatest(UserActions.BLOCK_USER, blockUserSaga)
+  yield takeLatest(UserActions.GET_BLOCKED_USERS, getBlockedUsersSaga)
+  yield takeLatest(UserActions.SYNC, syncSaga)
+}
+
+function* syncSaga() {
+  const syncTask = yield fork(fetchObjects)
+  yield take(UserActions.STOP_SYNC)
+  yield cancel(syncTask)
+}
+
+function* fetchObjects() {
+  try {
+    while (true) {
+      const token = yield select(getToken)
+      if (token) {
+        yield put(fetchNeighboursAction())
+        yield put(getNotificationsAction())
+        yield put(getBlockedUsersAction())
+      }
+      yield delay(15000)
+    }
+  } finally {
+  }
 }
 
 function* signInSaga(action: AnyAction) {
@@ -135,6 +177,26 @@ function* readNotificationSaga(action: AnyAction) {
     const id: string = action.payload.id
     const notifications: Notification[] = yield call(readNotification, id)
     yield put(getNotificationsIntern(notifications))
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+function* blockUserSaga(action: AnyAction) {
+  try {
+    yield put(stopSync())
+    const id: string = action.payload.id
+    yield call(blockUser, id)
+    yield put(sync())
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+function* getBlockedUsersSaga() {
+  try {
+    const users: BlockedUser[] = yield call(getBlockedUsers)
+    yield put(getBlockedUsersIntern(users))
   } catch (err) {
     console.log(err)
   }

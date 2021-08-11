@@ -1,7 +1,8 @@
-import React, { FC, useEffect } from "react"
+import { FC, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchNeighbours, getNotifications } from "../../store/user/actions"
+import { sync } from "../../store/user/actions"
 import { getToken } from "../../store/user/selectors"
+import BlockedUsersDialog from "../BlockedUserDialog"
 import FirstAccessDialog from "../FirstAccessDialog"
 import LoginDialog from "../LoginDialog"
 import MapView from "../MapView"
@@ -11,25 +12,11 @@ import SelectLocation from "../SelectLocation"
 import UserInfoDialog from "../UserInfoDialog"
 
 const PageComponents: FC = () => {
-  const token = useSelector(getToken)
   const dispatch = useDispatch()
+  const token = useSelector(getToken)
 
   useEffect(() => {
-    if (!token) return
-    const interval = setInterval(() => {
-      dispatch(fetchNeighbours())
-      dispatch(getNotifications())
-    }, 15000)
-    return () => {
-      clearInterval(interval)
-    }
-  })
-
-  useEffect(() => {
-    if (token) {
-      dispatch(fetchNeighbours())
-      dispatch(getNotifications())
-    }
+    dispatch(sync())
   }, [token, dispatch])
 
   return (
@@ -37,6 +24,7 @@ const PageComponents: FC = () => {
       <LoginDialog />
       <FirstAccessDialog />
       <NotificationDialog />
+      <BlockedUsersDialog />
       <MapView />
       <ProfilePage />
       <SelectLocation />

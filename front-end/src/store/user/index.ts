@@ -15,7 +15,9 @@ const INITIAL_STATE: UserState = {
   users: [],
   signup: false,
   showingNotifications: false,
+  showingBlock: false,
   notifications: [],
+  blocked: [],
 }
 
 const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
@@ -39,6 +41,15 @@ const reducer: Reducer<UserState> = (state = INITIAL_STATE, action) => {
         ...state,
         changingLocation: action.payload.value,
         changingLocationCallback: action.payload.callback,
+      }
+    }
+    case UserActions.SHOW_BLOCK: {
+      return { ...state, showingBlock: action.payload.value }
+    }
+    case UserActions.GET_BLOCKED_USERS_INTERN: {
+      return {
+        ...state,
+        blocked: action.payload.blocked,
       }
     }
     case UserActions.SHOW_NOTIFICATIONS: {

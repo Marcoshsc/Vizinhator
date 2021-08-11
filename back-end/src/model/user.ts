@@ -89,6 +89,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   email: { type: String, required: true },
   notifications: { type: [notificationSchema] },
+  blockedUsers: { type: [String], required: true },
 })
 
 export interface FieldValue {

@@ -1,6 +1,6 @@
 import httpContext from 'express-http-context'
 import { User, UserDTO } from '../../model/user'
-import { getUserDTOFromUser } from './util'
+import { canInteract, getUserDTOFromUser } from './util'
 
 export const likeOrDislikeUser = async (
   userId: string,
@@ -10,6 +10,10 @@ export const likeOrDislikeUser = async (
   const loggedUserId = loggedUser._id.toString()
   const user = await User.findById(userId)
   const arrayToBeUsed = like ? user.likedBy : user.dislikedBy
+
+  if (!canInteract(loggedUser, user)) {
+    throw new Error('Blocked user.')
+  }
 
   const index = user.likedBy.indexOf(loggedUserId)
   let content = ''
@@ -35,6 +39,11 @@ export const closeFriend = async (userId: string): Promise<UserDTO> => {
   const loggedUser = httpContext.get('loggedUser')
   const user = await User.findById(userId)
   const userIdDatabase = user._id.toString()
+
+  if (!canInteract(loggedUser, user)) {
+    throw new Error('Blocked user.')
+  }
+
   if (loggedUser.closeFriendsIds.includes(userIdDatabase)) {
     return getUserDTOFromUser(user)
   }
@@ -49,4 +58,34 @@ export const closeFriend = async (userId: string): Promise<UserDTO> => {
   const savedUser = await loggedUser.save()
   httpContext.set('loggedUser', savedUser)
   return getUserDTOFromUser(user)
+}
+
+export const blockUser = async (userId: string): Promise<void> => {
+  const loggedUser = httpContext.get('loggedUser')
+  const index = loggedUser.blockedUsers.indexOf(userId)
+  if (index === -1) {
+    loggedUser.blockedUsers.push(userId)
+    loggedUser.notifications = loggedUser.notifications.filter(
+      (el) => el.user !== userId
+    )
+  } else {
+    loggedUser.blockedUsers.splice(index, 1)
+  }
+  const savedUser = await loggedUser.save()
+  httpContext.set('loggedUser', savedUser)
+}
+
+export const getBlockedUsers = async (): Promise<
+  { id: string; name: string }[]
+> => {
+  const loggedUser = httpContext.get('loggedUser')
+  const users = await User.find({
+    _id: {
+      $in: loggedUser.blockedUsers,
+    },
+  })
+  return users.map((el) => ({
+    id: el._id,
+    name: el.name,
+  }))
 }

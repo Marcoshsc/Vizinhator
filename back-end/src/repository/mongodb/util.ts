@@ -21,6 +21,13 @@ export const getNotificationDTOFromNotification = (
   }
 }
 
+export const canInteract = (user1: any, user2: any) => {
+  return (
+    !user1.blockedUsers.includes(user2._id) &&
+    !user2.blockedUsers.includes(user1._id)
+  )
+}
+
 export const getUserDTOFromUser = (savedUser: any): UserDTO => {
   const loggedUser = httpContext.get('loggedUser')
   const loggedUserId = loggedUser._id.toString()

@@ -3,7 +3,9 @@ import { generateJwt } from '../jwt/jwt'
 import { UserDTO } from '../model/user'
 import {
   addUser,
+  blockGivenUser,
   editUser,
+  getLoggedBlockedUsers,
   getNearUsers,
   getUser,
   getUserNotifications,
@@ -37,6 +39,12 @@ userRoutes.get('/notifications', (req, res, next) => {
     .catch((err) => next(err))
 })
 
+userRoutes.get('/blocked', (req, res, next) => {
+  getLoggedBlockedUsers()
+    .then((users) => res.status(200).send(users))
+    .catch((err) => next(err))
+})
+
 userRoutes.get('/notifications/:id/read', (req, res, next) => {
   const id: string = req.params.id as string
   readUserNotification(id)
@@ -49,6 +57,13 @@ userRoutes.put('/', (req, res) => {
   editUser(userDTO).then((user) => {
     res.json(user)
   })
+})
+
+userRoutes.get('/:id/block', (req, res, next) => {
+  const id: string = req.params.id
+  blockGivenUser(id)
+    .then(() => res.status(200).send())
+    .catch((err) => next(err))
 })
 
 userRoutes.get('/:id', (req, res) => {

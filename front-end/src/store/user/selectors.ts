@@ -36,3 +36,7 @@ export const getNotifications = ({ user }: ApplicationState) =>
 
 export const isShowingNotifications = ({ user }: ApplicationState) =>
   user.showingNotifications
+
+export const getBlockedUsers = ({ user }: ApplicationState) => user.blocked
+
+export const isShowingBlock = ({ user }: ApplicationState) => user.showingBlock

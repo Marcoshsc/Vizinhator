@@ -43,6 +43,11 @@ export interface Message {
   sentAt?: Date
 }
 
+export interface BlockedUser {
+  id: string
+  name: string
+}
+
 export enum UserActions {
   SELECT_USER = "@user/SELECT_USER",
   SELECT_USER_STRING = "@user/SELECT_USER_STRING",
@@ -70,6 +75,12 @@ export enum UserActions {
   SHOW_NOTIFICATIONS = "@user/SHOW_NOTIFICATIONS",
   READ_NOTIFICATION = "@user/READ_NOTIFICATION",
   LOGOUT = "@user/LOGOUT",
+  BLOCK_USER = "@user/BLOCK_USER",
+  GET_BLOCKED_USERS = "@user/GET_BLOCKED_USERS",
+  GET_BLOCKED_USERS_INTERN = "@user/GET_BLOCKED_USERS_INTERN",
+  SYNC = "@user/SYNC",
+  STOP_SYNC = "@user/STOP_SYNC",
+  SHOW_BLOCK = "@user/SHOW_BLOCK",
 }
 
 export interface UserState {
@@ -77,6 +88,7 @@ export interface UserState {
   users: User[]
   logged?: User
   token?: string
+  blocked: BlockedUser[]
   showProfile: boolean
   changingLocation: boolean
   changingLocationCallback?(): void
@@ -85,5 +97,6 @@ export interface UserState {
   signup: boolean
   login: boolean
   showingNotifications: boolean
+  showingBlock: boolean
   notifications: Notification[]
 }

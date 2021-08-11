@@ -5,7 +5,12 @@ import {
   getUser as mongoDBGetUser,
   editUser as mongoDBEditUser,
 } from './mongodb/insert'
-import { closeFriend, likeOrDislikeUser } from './mongodb/interaction'
+import {
+  blockUser,
+  closeFriend,
+  getBlockedUsers,
+  likeOrDislikeUser,
+} from './mongodb/interaction'
 import { sendMessage } from './mongodb/message'
 import { getNotifications, readNotification } from './mongodb/notification'
 import { searchNearUsers } from './mongodb/search'
@@ -60,4 +65,12 @@ export const getUserNotifications = async (): Promise<NotificationDTO[]> => {
 
 export const readUserNotification = async (id: string) => {
   return await readNotification(id)
+}
+
+export const blockGivenUser = async (userId: string) => {
+  return await blockUser(userId)
+}
+
+export const getLoggedBlockedUsers = async () => {
+  return await getBlockedUsers()
 }

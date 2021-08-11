@@ -1,5 +1,5 @@
 import { action } from "typesafe-actions"
-import { Address, Message, User, UserActions } from "./types"
+import { Address, BlockedUser, Message, User, UserActions } from "./types"
 
 export const logout = () => action(UserActions.LOGOUT, {})
 
@@ -71,3 +71,17 @@ export const showNotifications = (value: boolean) =>
 
 export const readNotification = (id: string) =>
   action(UserActions.READ_NOTIFICATION, { id })
+
+export const getBlockedUsers = () => action(UserActions.GET_BLOCKED_USERS, {})
+
+export const getBlockedUsersIntern = (blocked: BlockedUser[]) =>
+  action(UserActions.GET_BLOCKED_USERS_INTERN, { blocked })
+
+export const blockUser = (id: string) => action(UserActions.BLOCK_USER, { id })
+
+export const sync = () => action(UserActions.SYNC)
+
+export const stopSync = () => action(UserActions.STOP_SYNC)
+
+export const showBlock = (value: boolean) =>
+  action(UserActions.SHOW_BLOCK, { value })

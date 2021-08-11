@@ -16,21 +16,25 @@ import { ImExit } from "react-icons/im"
 import { Tooltip, Typography } from "@material-ui/core"
 import {
   logout,
+  selectLocation,
+  showBlock,
   showNotifications,
   showProfile,
 } from "../../store/user/actions"
 import { Marker, useMap } from "react-leaflet"
+import { MdBlock } from "react-icons/md"
+import { DragEndEventHandlerFn } from "leaflet"
 
 const MapElements: FC = () => {
   const changingLocation = useSelector(isChangingLocation)
   const users = useSelector(getUsers)
   const selectedLocation = useSelector(getSelectedLocation)
+  const dispatch = useDispatch()
   const map = useMap()
   const loggedUser = useSelector(getLoggedUser)
 
   useEffect(() => {
     if (!selectedLocation) return
-    console.log("got here")
     map.flyTo({
       lat: selectedLocation.location[0],
       lng: selectedLocation.location[1],
@@ -46,17 +50,33 @@ const MapElements: FC = () => {
     }
   }, [loggedUser, map])
 
+  const handleChangeLocation: DragEndEventHandlerFn = (e) => {
+    const latlng = (e.target as any)._latlng
+    dispatch(
+      selectLocation({
+        description: "Changed by the user",
+        location: [latlng.lat, latlng.lng],
+      })
+    )
+  }
+
   return (
     <>
       {!changingLocation.value && (
         <MarkerClusterGroup>
-          {users.map((el, idx) => (
-            <UserMarker key={idx} user={el} />
+          {users.map((el) => (
+            <UserMarker key={el.id} user={el} />
           ))}
         </MarkerClusterGroup>
       )}
       {changingLocation.value && selectedLocation && (
-        <Marker position={selectedLocation.location}></Marker>
+        <Marker
+          position={selectedLocation.location}
+          draggable={true}
+          eventHandlers={{
+            dragend: handleChangeLocation,
+          }}
+        ></Marker>
       )}
     </>
   )
@@ -78,6 +98,10 @@ const MapView: FC<{}> = () => {
     dispatch(logout())
   }
 
+  const handleBlock = () => {
+    dispatch(showBlock(true))
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.actions}>
@@ -94,6 +118,11 @@ const MapView: FC<{}> = () => {
                 <Typography align="center">{`${notifications.length}`}</Typography>
               </div>
             )}
+          </div>
+        </Tooltip>
+        <Tooltip title="Blocked Users">
+          <div className={styles.profileIcon} onClick={handleBlock}>
+            <MdBlock />
           </div>
         </Tooltip>
         <Tooltip title="Logout">

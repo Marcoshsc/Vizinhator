@@ -1,6 +1,6 @@
 import httpContext from 'express-http-context'
 import { Message, User, UserDTO } from '../../model/user'
-import { getUserDTOFromUser } from './util'
+import { canInteract, getUserDTOFromUser } from './util'
 
 export const sendMessage = async (
   userId: string,
@@ -8,6 +8,11 @@ export const sendMessage = async (
 ): Promise<UserDTO> => {
   const loggedUser = httpContext.get('loggedUser')
   const user = await User.findById(userId)
+
+  if (!canInteract(loggedUser, user)) {
+    throw new Error('Blocked user.')
+  }
+
   const message = new Message({
     receiverId: userId,
     senderId: loggedUser._id,
