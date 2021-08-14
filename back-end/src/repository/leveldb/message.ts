@@ -6,8 +6,8 @@ import {
 } from '../../model/user'
 import httpContext from 'express-http-context'
 import { levelDatabase } from './database'
-import { canInteract, getUserDTOFromUser } from '../mongodb/util'
-import { generateRandomId } from './insert'
+import { generateRandomId, getUserDTOFromLevelUser } from './insert'
+import { canInteractLevel } from './util'
 
 export const sendMessageLevel = async (
   userId: string,
@@ -23,7 +23,7 @@ export const sendMessageLevel = async (
     throw new Error('Not found user')
   }
 
-  if (!canInteract(loggedUser, user)) {
+  if (!canInteractLevel(loggedUser, user)) {
     throw new Error('Blocked user.')
   }
 
@@ -47,5 +47,5 @@ export const sendMessageLevel = async (
   user.notifications.push(notification)
   httpContext.set('loggedUser', loggedUser)
   await levelDatabase.put('users', users)
-  return getUserDTOFromUser(user)
+  return getUserDTOFromLevelUser(user)
 }
