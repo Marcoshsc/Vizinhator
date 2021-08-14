@@ -69,6 +69,46 @@ export interface NotificationDTO {
   moment: Date
 }
 
+export interface LevelFieldValue {
+  value?: string
+  hide: boolean
+}
+
+export interface LevelMessage {
+  id: string
+  content: string
+  sentAt: Date
+  sender: string
+  receiver: string
+}
+
+export interface LevelNotification {
+  id: string
+  user: string
+  content: string
+  moment: Date
+}
+
+export interface LevelUserModel {
+  id: string
+  position: [number, number]
+  name: string
+  cellphone: LevelFieldValue
+  occupation: LevelFieldValue
+  avatarUrl: LevelFieldValue
+  description: LevelFieldValue
+  available: LevelFieldValue
+  since: Date
+  closeFriendsIds: string[]
+  likedBy: string[]
+  dislikedBy: string[]
+  messages: LevelMessage[]
+  password: string
+  email: string
+  blockedUsers: string[]
+  notifications: LevelNotification[]
+}
+
 const userSchema = new mongoose.Schema({
   position: {
     type: pointSchema,

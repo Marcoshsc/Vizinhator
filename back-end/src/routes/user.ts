@@ -23,6 +23,7 @@ userRoutes.post('/insert', (req, res) => {
       res.json(savedUser)
     })
     .catch((err) => {
+      console.log(err)
       res.status(400).send({ message: err.message })
     })
 })
@@ -54,9 +55,11 @@ userRoutes.get('/notifications/:id/read', (req, res, next) => {
 
 userRoutes.put('/', (req, res) => {
   const userDTO = req.body
-  editUser(userDTO).then((user) => {
-    res.json(user)
-  })
+  editUser(userDTO)
+    .then((user) => {
+      res.json(user)
+    })
+    .catch((err) => console.log(err))
 })
 
 userRoutes.get('/:id/block', (req, res, next) => {

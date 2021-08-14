@@ -2,7 +2,6 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import { json } from 'body-parser'
-import { addUser } from './repository/generalMethods'
 import userRoutes from './routes/user'
 import authRouter from './routes/auth'
 import { generateJwt, validateJwt } from './jwt/jwt'
@@ -10,6 +9,8 @@ import httpContext from 'express-http-context'
 import messageRouter from './routes/message'
 import { User } from './model/user'
 import interactionsRouter from './routes/interactions'
+import { databaseParameters } from './env/database'
+import { levelDatabase } from './repository/leveldb/database'
 
 const initialize = async () => {
   const app = express()
@@ -32,14 +33,24 @@ const initialize = async () => {
       const id = validateJwt(token)
       const newJwt = generateJwt(id)
       res.setHeader('authentication', newJwt)
-      User.findById(id)
-        .then((user) => {
+      if (databaseParameters.db === 'mongo') {
+        User.findById(id)
+          .then((user) => {
+            httpContext.set('loggedUser', user)
+            next()
+          })
+          .catch(() => {
+            throw new Error()
+          })
+      } else {
+        const getLevelDbUser = async () => {
+          const users = await levelDatabase.get('users')
+          const user = users.filter((el) => el.id === id)[0]
           httpContext.set('loggedUser', user)
           next()
-        })
-        .catch(() => {
-          throw new Error()
-        })
+        }
+        getLevelDbUser()
+      }
     } catch (err) {
       const newErr = new Error('Invalid authentication.')
       httpContext.set('status-code', 403)
