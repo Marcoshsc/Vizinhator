@@ -3,5 +3,5 @@ export interface DatabaseParameters {
 }
 
 export const databaseParameters: DatabaseParameters = {
-  db: 'level',
+  db: 'mongo',
 }
